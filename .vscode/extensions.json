@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "oxc.oxc-vscode",
+    "esbenp.prettier-vscode",
+    "Prisma.prisma",
+    "vitest.explorer",
+    "ms-azuretools.vscode-docker",
+    "GitHub.vscode-github-actions",
+    "EditorConfig.EditorConfig"
+  ]
+}
