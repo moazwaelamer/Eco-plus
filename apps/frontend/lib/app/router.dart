@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../core/session.dart';
 import '../features/auth/login_screen.dart';
+import '../features/auth/register_screen.dart';
 import '../features/citizen/citizen_shell.dart';
+import '../features/citizen/scan_screen.dart';
 import '../features/driver/driver_screen.dart';
 import '../features/staff/staff_screen.dart';
 
@@ -21,13 +23,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (session.isLoading) return null;
       final user = session.value;
       final atLogin = state.matchedLocation == '/login';
-      if (user == null) return atLogin ? null : '/login';
-      return atLogin || state.matchedLocation == '/' ? homeFor(user) : null;
+      final atRegister = state.matchedLocation == '/register';
+      if (user == null) return atLogin || atRegister ? null : '/login';
+      return atLogin || atRegister || state.matchedLocation == '/' ? homeFor(user) : null;
     },
     routes: [
       GoRoute(path: '/', builder: (_, _) => const _Splash()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+      GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
       GoRoute(path: '/home', builder: (_, _) => const CitizenShell()),
+      GoRoute(path: '/scan', builder: (_, _) => const ScanScreen()),
       GoRoute(path: '/driver', builder: (_, _) => const DriverScreen()),
       GoRoute(path: '/staff', builder: (_, _) => const StaffScreen()),
     ],

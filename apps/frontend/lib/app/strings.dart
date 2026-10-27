@@ -63,6 +63,66 @@ class S {
   String get wrongCode => _('الكود غير صحيح', 'The code does not match');
   String get routeFinished => _('انتهى المسار. أحسنت!', 'Route finished. Well done!');
 
+
+  // Register
+  String get createAccount => _('إنشاء حساب', 'Create account');
+  String get registerSub => _('ابدأ في تحويل الفرز إلى نقاط', 'Start turning sorting into points');
+  String get haveAccount => _('لديك حساب؟ سجّل الدخول', 'Have an account? Log in');
+  String get noAccount => _('ليس لديك حساب؟ أنشئ واحداً', 'No account? Create one');
+  String get fullName => _('الاسم الكامل', 'Full name');
+  String get phone => _('رقم الهاتف', 'Phone number');
+  String get email => _('البريد الإلكتروني (اختياري)', 'Email (optional)');
+  String get accountType => _('نوع الحساب', 'Account type');
+  String get citizen => _('فرد', 'Individual');
+  String get business => _('نشاط تجاري', 'Business');
+  String get businessName => _('اسم النشاط', 'Business name');
+  String get businessType => _('نوع النشاط (مقهى، سوبر ماركت…)', 'Business type (cafe, supermarket…)');
+  String get errName => _('اكتب اسمك (حرفان على الأقل)', 'Enter your name (at least 2 letters)');
+  String get errPhone => _('رقم غير صحيح (أرقام فقط، 8 إلى 15)', 'Invalid number (digits only, 8 to 15)');
+  String get errEmail => _('بريد غير صحيح', 'Invalid email');
+  String get errPassword => _('8 أحرف على الأقل، بها حرف ورقم', 'At least 8 characters with a letter and a number');
+  String get errRequired => _('مطلوب', 'Required');
+  String get errConflict => _('هذا الرقم أو البريد مستخدم بالفعل', 'This phone or email is already used');
+
+  // Scan
+  String get scanTitle => _('صوّر شنطتك', 'Scan your bag');
+  String get photo => _('صورة الشنطة', 'Bag photo');
+  String get photoHint => _('التقط صورة أو اختر من المعرض', 'Take a photo or choose from the gallery');
+  String get camera => _('الكاميرا', 'Camera');
+  String get gallery => _('المعرض', 'Gallery');
+  String get changePhoto => _('تغيير الصورة', 'Change photo');
+  String get material => _('نوع المحتوى', 'What is inside');
+  String get fillLevel => _('مدى امتلاء الشنطة', 'How full is the bag');
+  String get location => _('مكان الاستلام', 'Pickup location');
+  String get useMyLocation => _('استخدم موقعي الحالي', 'Use my current location');
+  String get locationSet => _('تم تحديد الموقع', 'Location set');
+  String get locationDenied => _('لم نتمكن من معرفة موقعك. فعّل الإذن أو حاول مرة أخرى.', 'We could not get your location. Allow it and try again.');
+  String get testLocation => _('موقع تجريبي (القاهرة)', 'Test location (Cairo)');
+  String get requestPickup => _('اطلب استلام', 'Request pickup');
+  String get needLocation => _('حدد مكان الاستلام أولاً', 'Set the pickup location first');
+  String get sending => _('جاري الإرسال…', 'Sending…');
+  String mat(String k) => switch (k) {
+        'plastic' => _('بلاستيك', 'Plastic'),
+        'paper' => _('ورق', 'Paper'),
+        'cardboard' => _('كرتون', 'Cardboard'),
+        'glass' => _('زجاج', 'Glass'),
+        'aluminium' => _('ألومنيوم', 'Aluminium'),
+        'metal' => _('معادن', 'Metal'),
+        'mixed' => _('مخلوط', 'Mixed'),
+        _ => k,
+      };
+
+  // Result
+  String get resultReady => _('تم طلب الاستلام', 'Pickup requested');
+  String get resultReadySub => _('ستصلك رسالة عند تخصيص سائق، وسيظهر كود التسليم في شحناتي.', 'You will be notified when a driver is assigned. The handover code appears in Shipments.');
+  String get resultMerge => _('شنطتك ستنضم لرحلة قريبة', 'Your bag rides along');
+  String get resultMergeSub => _('سائق يمر بجوارك، فسنأخذ شنطتك معه حتى لو لم تمتلئ تماماً.', 'A driver passes nearby, so we will take your bag even though it is not full yet.');
+  String get resultWait => _('الشنطة لم تمتلئ بعد', 'Not full enough yet');
+  String get resultWaitSub => _('نوفر الرحلات: عندما تقترب الشنطة من الامتلاء صوّرها مرة أخرى.', 'We save trips: when the bag is fuller, scan it again.');
+  String get shipmentCode => _('رمز الشحنة', 'Shipment code');
+  String get viewShipments => _('عرض شحناتي', 'View my shipments');
+  String get done => _('تم', 'Done');
+
   String get staffTitle => _('لوحة الإدارة على الويب', 'Management lives on the web');
   String get staffBody => _('هذا الدور يعمل من لوحة التحكم على الويب، وهي قيد البناء. تطبيق الموبايل متاح الآن للعملاء والسائقين.', 'This role works from the web dashboard, which is being built. The mobile app is for customers and drivers for now.');
 }

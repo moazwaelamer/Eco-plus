@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../app/strings.dart';
 import '../../app/theme.dart';
@@ -128,7 +129,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onPressed: _busy ? null : _submit,
                   child: _busy ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5)) : Text(s.login),
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 4),
+                Center(child: TextButton(onPressed: () => context.go('/register'), child: Text(s.noAccount))),
+                const SizedBox(height: 20),
                 Text(s.tryDemo, style: t.labelLarge?.copyWith(color: c.inkSoft)),
                 const SizedBox(height: 10),
                 Wrap(spacing: 8, runSpacing: 8, children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../app/strings.dart';
@@ -96,7 +97,7 @@ class _HomeTab extends ConsumerWidget {
           ),
         const SizedBox(height: 16),
         FilledButton.icon(
-          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.scanSoon))),
+          onPressed: () => context.push('/scan'),
           icon: const Icon(Icons.photo_camera_rounded),
           label: Text(s.scanBag),
           style: FilledButton.styleFrom(backgroundColor: context.eco.accent, foregroundColor: context.eco.onAccent),

@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>EcoPlus uses the camera to photograph your recycling bag.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>EcoPlus lets you pick a photo of your recycling bag.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>EcoPlus uses your location so the driver can find your pickup spot.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
