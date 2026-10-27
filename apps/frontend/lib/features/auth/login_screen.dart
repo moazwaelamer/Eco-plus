@@ -6,7 +6,8 @@ import '../../app/strings.dart';
 import '../../app/theme.dart';
 import '../../core/api.dart';
 import '../../core/session.dart';
-import '../../widgets/common.dart';
+import '../../widgets/brand.dart';
+import '../../widgets/motion.dart';
 
 /// Demo accounts exist only in a database filled by the development seed.
 const _demo = [
@@ -73,29 +74,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: TextButton(onPressed: ref.read(arabicProvider.notifier).toggle, child: Text(s.language)),
                 ),
                 const SizedBox(height: 8),
-                // Hero: the brand on a deep green panel with a lime leaf, so the first screen already feels like the product.
-                Container(
-                  padding: const EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [c.primary, Color.lerp(c.primary, Colors.black, 0.35)!],
-                    ),
+                // Hero: the brand on deep canopy with slow moving light, so the first screen already feels like the product.
+                AuroraBackdrop(
+                  padding: const EdgeInsets.fromLTRB(28, 28, 28, 32),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      const LogoMark(size: 56, animate: true),
+                      const SizedBox(height: 34),
+                      const Wordmark(size: 40, color: EcoColors.onCanopy).fadeUp(index: 2),
+                      const SizedBox(height: 10),
+                      Text(s.tagline, style: t.titleMedium?.copyWith(color: EcoColors.onCanopy.withValues(alpha: 0.82), fontWeight: FontWeight.w500)).fadeUp(index: 3),
+                    ]),
                   ),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const LogoMark(size: 52),
-                    const SizedBox(height: 28),
-                    Text(s.appName, style: t.displaySmall?.copyWith(color: c.onPrimary, fontWeight: FontWeight.w800, height: 1.1)),
-                    const SizedBox(height: 6),
-                    Text(s.tagline, style: t.titleMedium?.copyWith(color: c.onPrimary.withValues(alpha: 0.85))),
-                  ]),
                 ),
                 const SizedBox(height: 28),
-                Text(s.welcomeBack, style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                Text(s.welcomeBack, style: t.headlineSmall).fadeUp(index: 4),
                 const SizedBox(height: 4),
-                Text(s.loginSub, style: t.bodyMedium?.copyWith(color: c.inkSoft)),
+                Text(s.loginSub, style: t.bodyMedium?.copyWith(color: c.inkSoft)).fadeUp(index: 5),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _id,
@@ -103,7 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.username],
                   decoration: InputDecoration(labelText: s.identifier, prefixIcon: const Icon(Icons.alternate_email_rounded)),
-                ),
+                ).fadeUp(index: 6),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _pw,
@@ -115,7 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     prefixIcon: const Icon(Icons.lock_outline_rounded),
                     suffixIcon: IconButton(icon: Icon(_hide ? Icons.visibility_rounded : Icons.visibility_off_rounded), onPressed: () => setState(() => _hide = !_hide)),
                   ),
-                ),
+                ).fadeUp(index: 7),
                 if (_error != null) ...[
                   const SizedBox(height: 12),
                   Row(children: [
@@ -128,7 +124,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 FilledButton(
                   onPressed: _busy ? null : _submit,
                   child: _busy ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5)) : Text(s.login),
-                ),
+                ).fadeUp(index: 8),
                 const SizedBox(height: 4),
                 Center(child: TextButton(onPressed: () => context.go('/register'), child: Text(s.noAccount))),
                 const SizedBox(height: 20),
@@ -147,7 +143,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         _submit();
                       },
                     ),
-                ]),
+                ]).fadeUp(index: 10),
               ]),
             ),
           ),

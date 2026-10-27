@@ -6,7 +6,7 @@ import '../../app/strings.dart';
 import '../../app/theme.dart';
 import '../../core/api.dart';
 import '../../core/session.dart';
-import '../../widgets/common.dart';
+import '../../widgets/brand.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});

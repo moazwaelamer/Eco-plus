@@ -15,7 +15,7 @@ Arabic first (RTL) with English, light and dark themes.
 ## Not built yet
 
 Notifications list, uploading the photo from the web build was not exercised (file picker), camera and location were not tried on a phone, employee weighing, push notifications,
-offline queue, bundling the Cairo font (on first load the Arabic text briefly shows as boxes while the font downloads), real app icon and store assets, iOS and Android builds were not run (only the web build was checked).
+offline queue,  real app icon and store assets, iOS and Android builds were not run (only the web build was checked).
 
 ## Run
 
@@ -34,4 +34,4 @@ The Android emulator reaches the API at `10.0.2.2:3000` automatically. Checks: `
 ## Layout
 
 `lib/app` theme, router, strings. `lib/core` API client and session. `lib/features/<role>` screens. `lib/widgets` shared pieces.
-Design tokens are in `lib/app/theme.dart` (forest green, warm paper, lime accent, Cairo font).
+Brand: [docs/design/BRAND.md](../../docs/design/BRAND.md). Tokens in `lib/app/theme.dart` and `packages/brand/tokens.json`; motion and brand widgets in `lib/widgets/brand.dart` and `lib/widgets/motion.dart`. Font: IBM Plex Sans Arabic, bundled.

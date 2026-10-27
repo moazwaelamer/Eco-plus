@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app/strings.dart';
 import '../app/theme.dart';
 import '../core/api.dart';
+import 'motion.dart';
 
 class EcoCard extends StatelessWidget {
   const EcoCard({super.key, required this.child, this.padding = const EdgeInsets.all(20), this.color, this.onTap});
@@ -15,19 +16,17 @@ class EcoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.eco;
-    return Material(
-      color: color ?? c.surface,
-      borderRadius: BorderRadius.circular(kRadius),
-      child: InkWell(
+    final card = Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: color ?? c.surface,
         borderRadius: BorderRadius.circular(kRadius),
-        onTap: onTap,
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(kRadius), border: Border.all(color: c.line)),
-          child: child,
-        ),
+        border: Border.all(color: c.line),
+        boxShadow: color == null ? [BoxShadow(color: c.ink.withValues(alpha: 0.04), blurRadius: 18, offset: const Offset(0, 6))] : null,
       ),
+      child: child,
     );
+    return onTap == null ? card : Pressable(onTap: onTap, child: card);
   }
 }
 
@@ -107,31 +106,6 @@ class ErrorState extends ConsumerWidget {
         const SizedBox(height: 12),
         OutlinedButton(onPressed: onRetry, child: Text(s.tryAgain)),
       ]),
-    );
-  }
-}
-
-/// Small logo mark: a leaf-shaped tile. Used on the login screen and the app bar.
-class LogoMark extends StatelessWidget {
-  const LogoMark({super.key, this.size = 44});
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.eco;
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: c.accent,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(size * 0.5),
-          bottomRight: Radius.circular(size * 0.5),
-          topRight: Radius.circular(size * 0.14),
-          bottomLeft: Radius.circular(size * 0.14),
-        ),
-      ),
-      child: Icon(Icons.recycling_rounded, color: c.onAccent, size: size * 0.58),
     );
   }
 }

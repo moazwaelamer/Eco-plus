@@ -28,16 +28,31 @@ final routerProvider = Provider<GoRouter>((ref) {
       return atLogin || atRegister || state.matchedLocation == '/' ? homeFor(user) : null;
     },
     routes: [
-      GoRoute(path: '/', builder: (_, _) => const _Splash()),
-      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
-      GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
-      GoRoute(path: '/home', builder: (_, _) => const CitizenShell()),
-      GoRoute(path: '/scan', builder: (_, _) => const ScanScreen()),
-      GoRoute(path: '/driver', builder: (_, _) => const DriverScreen()),
-      GoRoute(path: '/staff', builder: (_, _) => const StaffScreen()),
+      GoRoute(path: '/', pageBuilder: (_, st) => _page(st, const _Splash())),
+      GoRoute(path: '/login', pageBuilder: (_, st) => _page(st, const LoginScreen())),
+      GoRoute(path: '/register', pageBuilder: (_, st) => _page(st, const RegisterScreen())),
+      GoRoute(path: '/home', pageBuilder: (_, st) => _page(st, const CitizenShell())),
+      GoRoute(path: '/scan', pageBuilder: (_, st) => _page(st, const ScanScreen(), rise: true)),
+      GoRoute(path: '/driver', pageBuilder: (_, st) => _page(st, const DriverScreen())),
+      GoRoute(path: '/staff', pageBuilder: (_, st) => _page(st, const StaffScreen())),
     ],
   );
 });
+
+/// Screens fade in; screens opened on top (like the scan flow) also rise a little.
+CustomTransitionPage<void> _page(GoRouterState state, Widget child, {bool rise = false}) => CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 360),
+      reverseTransitionDuration: const Duration(milliseconds: 240),
+      transitionsBuilder: (context, animation, secondary, child) {
+        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+        return FadeTransition(
+          opacity: curved,
+          child: rise ? SlideTransition(position: Tween(begin: const Offset(0, 0.06), end: Offset.zero).animate(curved), child: child) : child,
+        );
+      },
+    );
 
 String homeFor(User user) => switch (user.role) {
       'citizen' || 'business' => '/home',
