@@ -1,6 +1,6 @@
 # API reference (summary)
 
-Generated from the controllers. Full request and response shapes: Swagger at `/docs` when `SWAGGER_ENABLED=true`.
+Generated from the controllers by `scripts/gen-docs.py`. Full shapes: Swagger at `/docs` when `SWAGGER_ENABLED=true`.
 
 | Method | Path | Who | What |
 | --- | --- | --- | --- |
@@ -9,6 +9,7 @@ Generated from the controllers. Full request and response shapes: Swagger at `/d
 | POST | `/auth/logout` | public | Revoke a refresh token |
 | POST | `/auth/refresh` | public | Exchange a refresh token for a new token pair (the old refresh token stops working) |
 | POST | `/auth/register` | public | Create a citizen or business account (staff accounts are created by an admin) |
+| GET | `/catalog` | factory, admin | Material that can be ordered now: free stock per material and grade, with price |
 | GET | `/driver/routes` | driver | My routes for a day (today by default) with ordered stops |
 | POST | `/driver/routes/:id/start` | driver | Start my route (only on its own day, one at a time) |
 | POST | `/driver/stops/:shipmentId/collect` | driver | Mark a stop as collected by typing the customer\'s 6 digit handover code |
@@ -16,8 +17,19 @@ Generated from the controllers. Full request and response shapes: Swagger at `/d
 | POST | `/drivers` | admin | Create a driver account (admin) |
 | GET | `/drivers/:id` | admin | One driver (admin) |
 | PATCH | `/drivers/:id` | admin | Change licence or status, or deactivate the account (admin) |
+| GET | `/factories` | admin | List factories (admin) |
+| POST | `/factories` | admin | Add a factory (admin) |
+| GET | `/factories/:id` | admin | One factory with its logins (admin) |
+| PATCH | `/factories/:id` | admin | Change factory details (admin) |
+| POST | `/factories/:id/users` | admin | Create a login for a factory (admin) |
 | GET | `/health` | any logged in | Liveness check that also verifies the database connection |
+| GET | `/invoices` | factory, admin | Invoices of my factory (admin: all). Unpaid and past due shows as overdue |
+| GET | `/invoices/:id` | factory, admin | One invoice |
+| POST | `/invoices/:id/pay` | admin | Record a payment (admin) |
 | GET | `/leaderboard` | citizen | Top 20 citizens by points (shown as first name and last initial) and my own rank |
+| GET | `/materials` | admin, employee, factory | All material types with price and point factor |
+| POST | `/materials` | admin | Add a material type (admin) |
+| PATCH | `/materials/:id` | admin | Change price, point factor, name or active flag (admin). Existing orders keep their price |
 | GET | `/me` | any logged in | The logged-in user with profile and level |
 | POST | `/me/device-tokens` | any logged in | Register this phone for push notifications (moves the token if another user had it) |
 | DELETE | `/me/device-tokens/:token` | any logged in | Stop push notifications on this phone (call on logout) |
@@ -25,6 +37,13 @@ Generated from the controllers. Full request and response shapes: Swagger at `/d
 | GET | `/notifications` | any logged in | My notifications, newest first, with the unread count |
 | PATCH | `/notifications/:id/read` | any logged in | Mark one notification as read |
 | POST | `/notifications/read-all` | any logged in | Mark all my notifications as read |
+| GET | `/orders` | factory, admin | Orders of my factory (admin: all, optional factoryId) |
+| POST | `/orders` | factory | Place an order; the stock is reserved at once or the order is refused (factory) |
+| GET | `/orders/:id` | factory, admin | One order with items and invoice |
+| POST | `/orders/:id/cancel` | factory, admin | Cancel and release the stock (factory: placed only; admin: until dispatched) |
+| POST | `/orders/:id/confirm` | admin | Confirm an order (admin) |
+| POST | `/orders/:id/deliver` | admin | Mark an order as delivered: batches become sold and the invoice is issued (admin) |
+| POST | `/orders/:id/dispatch` | admin | Mark an order as dispatched (admin) |
 | GET | `/pickup-requests` | citizen, business | My pickup requests with their shipments |
 | POST | `/pickup-requests` | citizen, business | Request a pickup for one of my scans. 201 with a shipment when ready or merged, 200 with decision "wait" when not full enough. |
 | GET | `/pickup-requests/:id` | any logged in | One pickup request (owner, admin or employee) |

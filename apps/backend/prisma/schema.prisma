@@ -454,6 +454,7 @@ model Invoice {
   status   InvoiceStatus @default(issued)
   issuedAt DateTime      @default(now())
   dueAt    DateTime
+  paidAt   DateTime?
 
   order FactoryOrder @relation(fields: [orderId], references: [id])
 

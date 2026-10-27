@@ -1,6 +1,6 @@
 # Database dictionary
 
-24 tables, generated from `apps/backend/prisma/schema.prisma`. Constraints that Prisma cannot express (CHECKs, the `points_ledger` trigger) are in `apps/backend/prisma/migrations/*_constraints`.
+24 tables, generated from `apps/backend/prisma/schema.prisma` by `scripts/gen-docs.py`. Constraints Prisma cannot express (CHECKs, the `points_ledger` trigger) are in `apps/backend/prisma/migrations/*_constraints`.
 
 
 ## users
@@ -258,6 +258,7 @@
 | `status` | InvoiceStatus | @default(issued) |
 | `issuedAt` | DateTime | @default(now()) |
 | `dueAt` | DateTime |  |
+| `paidAt` | DateTime? | optional |
 
 ## notifications
 

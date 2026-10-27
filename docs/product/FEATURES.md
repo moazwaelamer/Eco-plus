@@ -52,7 +52,9 @@ Status: Built = in the backend with tests. App = needs the Flutter app or dashbo
 
 | Feature | Backend | Portal |
 | --- | --- | --- |
-| Material catalog, orders with stock reservation, invoices | Later (Phase 3) | Later |
+| Material catalog with live stock | Built | Not started |
+| Orders with stock reservation, cancel, status flow | Built | Not started |
+| Invoices (issued on delivery, pay, overdue) | Built | Not started |
 
 ## After the pilot
 

@@ -81,6 +81,23 @@ Admin plans the day, the driver follows the stops, the customer proves the hando
 
 Staff can no longer mark a shipment that is on a route as collected (`409 on_driver_route`).
 
+## What Phase 3 (factory side) does
+
+1. **Materials** (admin): `POST/PATCH /materials`; `GET /materials` for admin, employee and factory. Changing a price affects only future orders.
+2. **Factories** (admin): `POST/GET/PATCH /factories`, `POST /factories/:id/users` creates a login (role `factory`) tied to the factory.
+3. **Catalog** (factory, admin): `GET /catalog` shows free stock per material and grade with the price. Reserved and sold batches are not shown.
+4. **Order** (factory): `POST /orders` with lines `{materialTypeId, grade?, quantityKg}`. In one transaction the oldest batches are locked and
+   reserved (a batch that is only partly needed is split; the part taken becomes a `reserved` batch). If any line cannot be covered,
+   nothing is reserved and the answer is `409 insufficient_stock` with the available kg. Prices are copied into the order items.
+5. **Status**: `placed -> confirmed -> dispatched -> delivered` (admin: `POST /orders/:id/confirm|dispatch|deliver`). Cancel with
+   `POST /orders/:id/cancel`: a factory only while `placed`, an admin until `dispatched`; reserved stock goes back to `in_stock`.
+6. **Delivery** makes the batches `sold` and issues the invoice in the same transaction: number `ECO-INV-YYYY-NNNNNN`, total = sum of
+   kg x unit price (2 decimals), due `INVOICE_DUE_DAYS` (30) after delivery.
+7. **Invoices**: `GET /invoices`, `GET /invoices/:id` (factory sees its own; others get 404), `POST /invoices/:id/pay` (admin). An unpaid
+   invoice past its due date is shown as `overdue` when read; there is no background job.
+
+Still open in Phase 3: admin dashboard numbers, impact report, capacity and low-stock alerts, audit log table, user and level management.
+
 ## Tests
 
 ```bash
@@ -138,6 +155,7 @@ The Prisma schema follows the dictionary (section 6b) with a few additions found
 | `invoices.number`, `dueAt` | Invoice numbering and overdue calculation |
 | `weighing_records.materialTypeId` optional | A rejected weighing may not have a known material |
 | `shipments.status` has `cancelled` | A user can withdraw a request before collection |
+| `invoices.paidAt` | When an invoice was paid |
 | New table `device_tokens` | Phone push tokens for notifications |
 | `shipments.status` can go `assigned` -> `created` | A planned route can be changed, the shipment returns to waiting |
 | `points_ledger` trigger | Blocks UPDATE and DELETE, so history cannot be rewritten |

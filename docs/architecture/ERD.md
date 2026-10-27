@@ -1,6 +1,6 @@
 # Entity relationship diagram
 
-Generated from `apps/backend/prisma/schema.prisma` (24 tables). Chain of custody: Shipment -> WeighingRecord -> Batch -> OrderItem -> FactoryOrder. `points_ledger` is append-only.
+Generated from `apps/backend/prisma/schema.prisma` (24 tables) by `scripts/gen-docs.py`. Chain of custody: Shipment -> WeighingRecord -> Batch -> OrderItem -> FactoryOrder. `points_ledger` is append-only.
 
 ```mermaid
 erDiagram
@@ -220,6 +220,7 @@ erDiagram
     enum status
     DateTime issuedAt
     DateTime dueAt
+    DateTime paidAt
   }
   NOTIFICATIONS {
     Int id PK

@@ -8,10 +8,14 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/roles.guard.js';
 import { requestId } from './common/request-id.middleware.js';
 import { type Env, validateEnv } from './config/env.js';
+import { CatalogModule } from './catalog/catalog.module.js';
 import { DevicesModule } from './devices/devices.module.js';
+import { FactoriesModule } from './factories/factories.module.js';
 import { FleetModule } from './fleet/fleet.module.js';
 import { HealthController } from './health/health.controller.js';
+import { InvoicesModule } from './invoices/invoices.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { OrdersModule } from './orders/orders.module.js';
 import { PointsModule } from './points/points.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { PushModule } from './push/push.module.js';
@@ -57,6 +61,10 @@ import { WeighingModule } from './weighing/weighing.module.js';
     WeighingModule,
     WarehouseModule,
     FleetModule,
+    CatalogModule,
+    FactoriesModule,
+    OrdersModule,
+    InvoicesModule,
     RoutesModule,
     AdminModule,
   ],

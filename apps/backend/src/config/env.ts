@@ -26,6 +26,8 @@ const envSchema = z.object({
   APP_TIMEZONE: z.string().default('Africa/Cairo'),
   // "none" sends nothing, "log" only logs how many phones would get the push. A real FCM sender is not built yet.
   PUSH_PROVIDER: z.enum(['none', 'log']).default('none'),
+  // Days between delivery and the invoice due date.
+  INVOICE_DUE_DAYS: z.coerce.number().int().positive().default(30),
   UPLOAD_DIR: z.string().default('./uploads'),
   MAX_UPLOAD_MB: z.coerce.number().positive().default(5),
   SWAGGER_ENABLED: z
