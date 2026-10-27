@@ -1,12 +1,12 @@
 {
   "version": "2.0.0",
   "tasks": [
-    { "label": "Start API (watch)", "type": "npm", "script": "start:dev", "isBackground": true, "problemMatcher": [] },
-    { "label": "Unit tests", "type": "npm", "script": "test", "problemMatcher": [] },
-    { "label": "E2E tests", "type": "npm", "script": "test:e2e", "problemMatcher": [] },
-    { "label": "Lint", "type": "npm", "script": "lint", "problemMatcher": [] },
-    { "label": "Typecheck", "type": "npm", "script": "typecheck", "problemMatcher": ["$tsc"] },
-    { "label": "Prisma: migrate dev", "type": "npm", "script": "db:migrate", "problemMatcher": [] },
-    { "label": "Prisma: seed", "type": "npm", "script": "db:seed", "problemMatcher": [] }
+    { "label": "Start API (watch)", "type": "npm", "path": "apps/backend", "script": "start:dev", "isBackground": true, "problemMatcher": [] },
+    { "label": "Unit tests", "type": "npm", "path": "apps/backend", "script": "test", "problemMatcher": [] },
+    { "label": "E2E tests", "type": "npm", "path": "apps/backend", "script": "test:e2e", "problemMatcher": [] },
+    { "label": "Lint", "type": "npm", "path": "apps/backend", "script": "lint", "problemMatcher": [] },
+    { "label": "Typecheck", "type": "npm", "path": "apps/backend", "script": "typecheck", "problemMatcher": ["$tsc"] },
+    { "label": "Prisma: migrate dev", "type": "npm", "path": "apps/backend", "script": "db:migrate", "problemMatcher": [] },
+    { "label": "Prisma: seed", "type": "npm", "path": "apps/backend", "script": "db:seed", "problemMatcher": [] }
   ]
 }

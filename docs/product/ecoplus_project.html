@@ -1,0 +1,1213 @@
+<title>EcoPlus Project Document</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one long reading column, sticky-free contents list, each section a titled block; diagrams scroll sideways inside their own box */
+:root {
+  --bg:#f5f7f4; --fg:#16231c; --muted:#5a6b61; --line:#d3dcd5; --panel:#ffffff;
+  --accent:#1f7a4d; --good:#1f7a4d; --warn:#a15c00; --bad:#b3261e; --input:#fbfcfb;
+  --font-body:"IBM Plex Sans", system-ui, sans-serif; --font-mono:"IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg:#101a15; --fg:#e3ece6; --muted:#9aaea1; --line:#27382f; --panel:#16221b; --accent:#5fcf93; --good:#5fcf93; --warn:#f0b35a; --bad:#ff8a80; --input:#101a15; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg:#101a15; --fg:#e3ece6; --muted:#9aaea1; --line:#27382f; --panel:#16221b; --accent:#5fcf93; --good:#5fcf93; --warn:#f0b35a; --bad:#ff8a80; --input:#101a15; color-scheme: dark; }
+body { background:var(--bg); color:var(--fg); font-family:var(--font-body); font-size:15px; line-height:1.55;
+  padding-block:32px 64px; padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px)); }
+main { max-width:1040px; margin:0 auto; display:flex; flex-direction:column; gap:44px; }
+h1 { font-size:30px; margin:0 0 4px; text-wrap:balance; }
+h2 { font-size:21px; margin:0 0 2px; text-wrap:balance; }
+h3 { font-size:12px; margin:0 0 10px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:500; }
+p { margin:0; max-width:70ch; color:var(--muted); }
+.meta { font-family:var(--font-mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+section { display:flex; flex-direction:column; gap:12px; min-width:0; scroll-margin-top:16px; }
+.box { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:16px; overflow-x:auto; min-width:0; }
+.notice { border-left:3px solid var(--warn); padding:8px 12px; color:var(--fg); background:var(--panel); border-radius:0 6px 6px 0; max-width:none; }
+nav ol { margin:0; padding-left:20px; columns:2 280px; column-gap:32px; }
+nav a { color:var(--accent); text-decoration:none; }
+nav a:hover { text-decoration:underline; }
+nav a:focus-visible, .field input:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.groups { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+.group { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.field { display:grid; grid-template-columns:1fr 110px; gap:8px; align-items:center; }
+.field label { font-size:13px; }
+.field input { width:100%; box-sizing:border-box; font-family:var(--font-mono); font-size:13px; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:var(--input); color:var(--fg); text-align:right; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+.tile { background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:14px; min-width:0; }
+.tile .k { font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+.tile .v { font-size:23px; font-weight:600; font-variant-numeric:tabular-nums; margin-top:4px; }
+.tile .s { font-size:12px; color:var(--muted); margin-top:2px; }
+.good { color:var(--good); } .bad { color:var(--bad); } .warn { color:var(--warn); }
+table { border-collapse:collapse; width:100%; font-size:14px; }
+th,td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:500; }
+td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; font-family:var(--font-mono); font-size:13px; }
+tr.total td { font-weight:600; border-top:2px solid var(--line); }
+.two { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+ul { margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; }
+li { color:var(--fg); }
+code { font-family:var(--font-mono); font-size:13px; }
+/* UML use case drawing */
+svg.uc { display:block; width:100%; min-width:680px; height:auto; }
+.uc-boundary { fill:none; stroke:var(--muted); stroke-width:1.4; }
+.uc-ell { fill:var(--panel); stroke:var(--accent); stroke-width:1.5; }
+.uc-line { stroke:var(--fg); stroke-width:1.1; fill:none; }
+.uc-rel { stroke:var(--muted); stroke-width:1.2; stroke-dasharray:5 4; fill:none; }
+.uc-fig { stroke:var(--fg); stroke-width:1.6; fill:none; }
+.uc-ext .uc-fig { stroke:var(--muted); }
+.uc-text { fill:var(--fg); font-family:var(--font-body); font-size:12.5px; text-anchor:middle; }
+.uc-label { fill:var(--muted); font-family:var(--font-mono); font-size:11px; }
+.uc-title { fill:var(--muted); font-family:var(--font-mono); font-size:12px; text-anchor:middle; text-transform:uppercase; letter-spacing:.06em; }
+.uc-arrow { fill:none; stroke:var(--muted); stroke-width:1.3; }
+</style>
+
+<main>
+  <header>
+    <div class="meta">EcoPlus · Smart Recycling Platform</div>
+    <h1>EcoPlus Project Document</h1>
+    <p>Graduation project and a possible real business: actors, UML use case diagrams, sequence and activity diagrams, database design, a feasibility model, and the execution plan, all in one file.</p>
+  </header>
+
+  <nav class="box">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#overview">Project summary</a></li>
+      <li><a href="#actors">Actors</a></li>
+      <li><a href="#usecases">Use case diagrams</a></li>
+      <li><a href="#sequence">Sequence diagrams</a></li>
+      <li><a href="#activity">Activity diagram</a></li>
+      <li><a href="#erd">Entity relationship diagram</a></li>
+      <li><a href="#dict">Database explained: tables and columns</a></li>
+      <li><a href="#competitors">Competitors in Egypt</a></li>
+      <li><a href="#newfeatures">Features added after the competitor review</a></li>
+      <li><a href="#feasibility">Feasibility and capital</a></li>
+      <li><a href="#plan">Execution plan</a></li>
+      <li><a href="#stack">Technology stack and hosting</a></li>
+      <li><a href="#dbplan">Database implementation</a></li>
+      <li><a href="#phases">Delivery phases and task breakdown</a></li>
+      <li><a href="#workflow">How we work together</a></li>
+    </ol>
+  </nav>
+
+  <section id="overview">
+    <h2>1. Project summary</h2>
+    <div class="box">
+      <p style="max-width:none;color:var(--fg)">EcoPlus connects households and businesses to recycling factories. A person photographs a bag, the AI estimates fill level, content type and contamination, a pickup is decided, a shipment gets a QR code and GPS, a driver collects it, an employee weighs it, and the weight (the ground truth) gives points, a warehouse batch and stock. Factories then order clean material. The first version covers households and supermarkets/cafés. Forecasting, heatmaps, IoT bins and a recycling marketplace are future work.</p>
+    </div>
+  </section>
+
+  <section id="actors">
+    <h2>2. Actors</h2>
+    <div class="box">
+      <table>
+        <tr><th>Actor</th><th>Type</th><th>Role in the system</th></tr>
+        <tr><td>Citizen</td><td>Primary</td><td>Scans bags, requests pickup, earns points</td></tr>
+        <tr><td>Business</td><td>Primary</td><td>Same as Citizen, plus agreement and invoices</td></tr>
+        <tr><td>Driver</td><td>Primary</td><td>Follows ordered stops and confirms pickups</td></tr>
+        <tr><td>Employee</td><td>Primary</td><td>Scans QR, weighs, confirms, manages warehouse batches</td></tr>
+        <tr><td>Admin</td><td>Primary</td><td>Monitors, manages users, prices and levels</td></tr>
+        <tr><td>Factory</td><td>Primary</td><td>Orders clean material and tracks delivery</td></tr>
+        <tr><td>AI Service, Routes API, FCM</td><td>Secondary</td><td>Image analysis, route ordering, push notifications</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="usecases">
+    <h2>3. Use case diagrams</h2>
+    <p>Stick figures are actors, ovals are use cases, the rectangle is the system boundary. Dashed arrows show «include» (always happens as part of the base case) and «extend» (optional, happens under a condition). Grey figures on the right are external systems.</p>
+    <div class="box"><div id="uc1"></div></div>
+    <div class="box"><div id="uc2"></div></div>
+    <div class="box"><div id="uc3"></div></div>
+  </section>
+
+  <section id="sequence">
+    <h2>4. Sequence diagrams</h2>
+    <h3>4.1 Bag scan and pickup request</h3>
+    <div class="box">
+<pre class="mermaid">
+sequenceDiagram
+  actor C as Citizen
+  participant App as Mobile App
+  participant AI as AI Model (on device)
+  participant API as Backend API
+  participant DB as Database
+  C->>App: Photograph the bag
+  App->>AI: Image
+  AI-->>App: Fill level, content type, contamination, confidence
+  alt Low confidence or opaque bag
+    App->>C: Ask to open the bag or pick the type
+    C->>App: Pick the type
+  end
+  App->>API: Create scan and pickup request with GPS
+  API->>DB: Save BagScan and PickupRequest
+  API->>API: Decide ready, wait or merge with nearby requests
+  alt Ready
+    API->>DB: Create Shipment with unique QR
+    API-->>App: QR code and status
+  else Wait
+    API-->>App: Notify to request again later
+  end
+</pre>
+    </div>
+    <h3>4.2 Pickup, weighing, points and warehouse</h3>
+    <div class="box">
+<pre class="mermaid">
+sequenceDiagram
+  actor D as Driver
+  actor E as Employee
+  participant API as Backend API
+  participant R as Routes API
+  participant DB as Database
+  participant F as FCM
+  API->>R: Stops for today
+  R-->>API: Ordered route
+  API-->>D: Ordered stops
+  D->>API: Mark shipment collected
+  API->>F: Push to citizen
+  E->>API: Scan shipment QR
+  API-->>E: Shipment details and AI estimate
+  E->>API: Enter actual weight, material and grade
+  alt Contaminated
+    API->>DB: Save record as rejected with reason
+    API->>F: Notify rejected
+  else Accepted
+    API->>DB: Save WeighingRecord
+    API->>DB: Append PointsLedger (weight x material factor x level multiplier)
+    API->>DB: Add to Batch and update stock
+    API->>F: Notify points earned
+  end
+</pre>
+    </div>
+    <h3>4.3 Factory order</h3>
+    <div class="box">
+<pre class="mermaid">
+sequenceDiagram
+  actor Fa as Factory
+  actor A as Admin
+  participant API as Backend API
+  participant DB as Database
+  Fa->>API: Browse material catalog
+  API-->>Fa: Materials, grades, stock, price
+  Fa->>API: Place order (type and quantity)
+  API->>DB: Check available batches
+  alt Enough stock
+    API->>DB: Reserve batches and create order and invoice
+    API-->>Fa: Order confirmed
+    A->>API: Dispatch order
+    API->>DB: Status delivered
+    API-->>Fa: Delivery update
+  else Not enough stock
+    API-->>Fa: Partial quantity or notify when available
+  end
+</pre>
+    </div>
+  </section>
+
+  <section id="activity">
+    <h2>5. Activity diagram: pickup decision</h2>
+    <div class="box">
+<pre class="mermaid">
+flowchart TD
+  S([Start]) --> P[Citizen photographs the bag]
+  P --> AI[AI estimates fill level, content, contamination]
+  AI --> Q{Confidence high?}
+  Q -- No --> M[Open the bag or pick the type manually]
+  M --> L[Compute fill level and distance]
+  Q -- Yes --> L
+  L --> R{Bag full enough?}
+  R -- No --> W[Tell user to wait and scan later]
+  W --> E([End])
+  R -- Yes --> N{Nearby requests on the route?}
+  N -- Yes --> G[Merge into one stop]
+  N -- No --> H[Create single stop]
+  G --> SH[Create shipment with QR and GPS]
+  H --> SH
+  SH --> D[Driver collects at ordered stop]
+  D --> WG[Employee weighs and checks]
+  WG --> OK{Accepted?}
+  OK -- No --> RJ[Rejected, no points]
+  OK -- Yes --> PT[Points, batch and stock updated]
+  RJ --> E
+  PT --> E
+</pre>
+    </div>
+  </section>
+
+  <section id="erd">
+    <h2>6. Entity relationship diagram</h2>
+    <p>Chain of custody: Shipment → WeighingRecord → Batch → OrderItem → FactoryOrder. <code>PointsLedger</code> is append-only: rows are never edited, corrections are new rows.</p>
+    <div class="box">
+<pre class="mermaid">
+erDiagram
+  USER ||--o| CITIZEN_PROFILE : has
+  USER ||--o| BUSINESS_PROFILE : has
+  USER ||--o| DRIVER : is
+  USER ||--o| EMPLOYEE : is
+  FACTORY ||--o{ USER : staffed_by
+  CITIZEN_PROFILE }o--|| LEVEL : at
+  CITIZEN_PROFILE ||--o{ BAG_SCAN : makes
+  BUSINESS_PROFILE ||--o{ BAG_SCAN : makes
+  BAG_SCAN ||--o| PICKUP_REQUEST : triggers
+  PICKUP_REQUEST ||--|| SHIPMENT : becomes
+  ROUTE ||--o{ ROUTE_STOP : contains
+  SHIPMENT ||--o| ROUTE_STOP : visited_in
+  DRIVER ||--o{ ROUTE : assigned
+  VEHICLE ||--o{ ROUTE : used_in
+  SHIPMENT ||--o| WEIGHING_RECORD : verified_by
+  EMPLOYEE ||--o{ WEIGHING_RECORD : performs
+  WEIGHING_RECORD ||--o{ POINTS_LEDGER : earns
+  USER ||--o{ POINTS_LEDGER : owns
+  MATERIAL_TYPE ||--o{ WEIGHING_RECORD : classified_as
+  WEIGHING_RECORD }o--o| BATCH : added_to
+  MATERIAL_TYPE ||--o{ BATCH : of
+  WAREHOUSE ||--o{ BATCH : stores
+  FACTORY ||--o{ FACTORY_ORDER : places
+  FACTORY_ORDER ||--|{ ORDER_ITEM : has
+  MATERIAL_TYPE ||--o{ ORDER_ITEM : requested
+  BATCH ||--o{ ORDER_ITEM : fulfills
+  FACTORY_ORDER ||--o| INVOICE : billed_by
+  USER ||--o{ NOTIFICATION : receives
+
+  USER {
+    int id PK
+    string name
+    string phone
+    string email
+    string password_hash
+    string role
+    int factory_id FK
+    datetime created_at
+  }
+  CITIZEN_PROFILE {
+    int user_id PK
+    int level_id FK
+    int total_points
+    string address
+    float lat
+    float lng
+  }
+  BUSINESS_PROFILE {
+    int user_id PK
+    string business_name
+    string business_type
+    string agreement_ref
+    float lat
+    float lng
+  }
+  LEVEL {
+    int id PK
+    string name
+    int min_points
+    float multiplier
+  }
+  BAG_SCAN {
+    int id PK
+    int user_id FK
+    string image_url
+    float fill_level
+    string content_type
+    float contamination
+    float confidence
+    datetime scanned_at
+  }
+  PICKUP_REQUEST {
+    int id PK
+    int scan_id FK
+    string decision
+    string status
+    string channel
+    datetime requested_at
+  }
+  SHIPMENT {
+    int id PK
+    int request_id FK
+    string qr_code
+    float gps_lat
+    float gps_lng
+    string source_type
+    string handover_code
+    string status
+  }
+  VEHICLE {
+    int id PK
+    string plate
+    string type
+    float capacity_kg
+  }
+  DRIVER {
+    int user_id PK
+    string license_no
+    string status
+  }
+  ROUTE {
+    int id PK
+    int driver_id FK
+    int vehicle_id FK
+    date route_date
+    string status
+  }
+  ROUTE_STOP {
+    int id PK
+    int route_id FK
+    int shipment_id FK
+    int stop_order
+    datetime collected_at
+  }
+  EMPLOYEE {
+    int user_id PK
+    int warehouse_id FK
+    string position
+  }
+  WEIGHING_RECORD {
+    int id PK
+    int shipment_id FK
+    int employee_id FK
+    int material_type_id FK
+    int batch_id FK
+    float actual_weight_kg
+    string grade
+    boolean accepted
+    string reject_reason
+    datetime weighed_at
+  }
+  POINTS_LEDGER {
+    int id PK
+    int user_id FK
+    int weighing_id FK
+    int points
+    string reason
+    datetime created_at
+  }
+  MATERIAL_TYPE {
+    int id PK
+    string name
+    float point_factor
+    float price_per_kg
+    float co2_kg_per_kg
+  }
+  WAREHOUSE {
+    int id PK
+    string name
+    string address
+    float capacity_kg
+  }
+  BATCH {
+    int id PK
+    int warehouse_id FK
+    int material_type_id FK
+    float weight_kg
+    string grade
+    string status
+    datetime created_at
+  }
+  FACTORY {
+    int id PK
+    string name
+    string contact
+    string address
+  }
+  FACTORY_ORDER {
+    int id PK
+    int factory_id FK
+    string status
+    datetime ordered_at
+    datetime delivered_at
+  }
+  ORDER_ITEM {
+    int id PK
+    int order_id FK
+    int material_type_id FK
+    int batch_id FK
+    float quantity_kg
+    float unit_price
+  }
+  INVOICE {
+    int id PK
+    int order_id FK
+    float total
+    string status
+    datetime issued_at
+  }
+  NOTIFICATION {
+    int id PK
+    int user_id FK
+    string title
+    string body
+    boolean is_read
+    datetime sent_at
+  }
+</pre>
+    </div>
+    <div class="box">
+      <table>
+        <tr><th>Decision</th><th>Why</th></tr>
+        <tr><td>Points only from <code>WEIGHING_RECORD</code></td><td>Matches the agreed rule: Points = Weight × MaterialFactor × LevelMultiplier. Prevents fake claims.</td></tr>
+        <tr><td>One <code>USER</code> table with <code>role</code></td><td>One login; the role in the JWT decides the home screen.</td></tr>
+        <tr><td>Vehicle, Driver and Route tables</td><td>Needed once the project runs as a real business with hired drivers.</td></tr>
+        <tr><td>Business billing not modeled</td><td>Depends on the commercial model: whether businesses pay EcoPlus or are paid for their material.</td></tr>
+      </table>
+    </div>
+  </section>
+
+    <section id="dict">
+    <h2>6b. Database explained</h2>
+    <p>How to read it: a table is a list of one kind of thing (users, shipments, batches). Each row is one item. <strong>PK</strong> is the column that identifies the row. <strong>FK</strong> is a column that points to a row in another table, which is how tables connect. All ids and values in the example below are made up to show the idea.</p>
+    <h3>The story of one bag through the tables</h3>
+    <div class="box"><table id="life"></table></div>
+    <h3>Every table, column by column</h3>
+    <div id="dict-list" style="display:flex;flex-direction:column;gap:16px"></div>
+    <h3>Rules the database must enforce</h3>
+    <div class="box">
+      <ul>
+        <li>Points are created only from a weighing record, never from a scan or a request.</li>
+        <li><code>POINTS_LEDGER</code> rows are never edited or deleted. A mistake is fixed with a new row of opposite points.</li>
+        <li><code>CITIZEN_PROFILE.total_points</code> is a convenience copy. If it ever disagrees with the sum of the ledger, the ledger is right.</li>
+        <li>A shipment has at most one weighing record, and a weighing record needs a positive weight.</li>
+        <li>Saving the weighing, the points, the batch and the stock change happens in one transaction, so all of it succeeds or none of it does.</li>
+        <li>An order item can only take weight from batches that have stock left.</li>
+      </ul>
+    </div>
+  </section>
+
+    <section id="competitors">
+    <h2>6c. Competitors in Egypt</h2>
+    <p>The earlier comparison in your files was against a GitHub project (Smart Waste Management AI), not against real companies in Egypt. This is a first search of the Egyptian market. Everything below comes from news articles and company profiles, so it is self-reported, and I did not check whether each service is still operating.</p>
+    <div class="box">
+      <table>
+        <tr><th>Company</th><th>What it does</th><th>Rewards</th><th>Business customers</th></tr>
+        <tr><td>Bekia</td><td>Households book pickups of plastics, paper, metals, used oil and electronics through an app or website. Collectors weigh at published rates.</td><td>Payment to a wallet or bank, or credits for vouchers, groceries and airtime</td><td>Reported partnerships with 100+ companies for collection and sustainability reports. A seed round of $765,000 in September 2026 was announced for a B2B software product.</td></tr>
+        <tr><td>Plstka</td><td>Gamified app, started in the Delta region.</td><td>Discounts and coupons</td><td>Not found</td></tr>
+        <tr><td>Big Scrappers</td><td>Courier pickup requested from an app.</td><td>Cash or in-app points</td><td>Not found</td></tr>
+        <tr><td>Bekya Pay</td><td>Consumer app that encourages sorting and returning recyclables.</td><td>Cash</td><td>Not found</td></tr>
+        <tr><td>Go Clean</td><td>Started with factories and cafés, then added household pickup by phone or WhatsApp (2019 source).</td><td>Not found</td><td>Yes, cafés and factories</td></tr>
+        <tr><td>RecycoLife</td><td>Advertises on social media, then sends workers to buy valuable waste such as plastic and aluminium.</td><td>Pays for material</td><td>Not found</td></tr>
+        <tr><td>Dawarha</td><td>Reverse vending machines that use AI to accept bottles and cans.</td><td>Rewards through the app</td><td>Different model: machines, not pickup</td></tr>
+      </table>
+    </div>
+    <h3>Where EcoPlus could be different</h3>
+    <div class="box">
+      <table>
+        <tr><th>EcoPlus feature</th><th>What I found about competitors</th></tr>
+        <tr><td>AI check of the whole bag before pickup (fill level, content, contamination) to decide ready, wait or merge</td><td>Not mentioned in any source. Only Dawarha uses AI, and for machines. This is not proof that nobody has it.</td></tr>
+        <tr><td>Points only from the weight confirmed by an employee</td><td>Competitors pay on weight too, so the idea is not new. It matters as protection against fake claims.</td></tr>
+        <tr><td>QR code and GPS on every shipment, from home to warehouse to factory</td><td>Not mentioned in any source.</td></tr>
+        <tr><td>Factory portal: catalog, orders, invoices linked to real warehouse stock</td><td>Only Bekia's new B2B product might overlap, and its details are not public in what I found.</td></tr>
+        <tr><td>Levels and leaderboard</td><td>Plstka is described as gamified, so this is not unique.</td></tr>
+      </table>
+    </div>
+    <h3>What this means for the plan</h3>
+    <div class="box">
+      <ul>
+        <li><strong>Bekia is the main competitor.</strong> It reports more than 100,000 customers, 25,000 tonnes diverted, and fresh funding. Competing with it on home pickup alone is unlikely to work.</li>
+        <li><strong>Our angle is traceability and quality.</strong> Verified weight, contamination check and a direct link to factories, aimed first at businesses with large loads, where the feasibility model is strongest.</li>
+        <li><strong>Informal collectors are a risk.</strong> One article describes conflict between startups and the traditional sorters (Zabaleen) in Cairo. Think about working with them, not around them.</li>
+        <li><strong>Next research:</strong> try the Bekia and Plstka apps yourself, call 2 or 3 of their business customers, and check their prices per kg.</li>
+      </ul>
+    </div>
+    <h3>Sources</h3>
+    <div class="box">
+      <ul>
+        <li><a href="https://launchbaseafrica.com/2026/09/16/bekia-recycling/">Launch Base Africa: Bekia secures $765,000</a></li>
+        <li><a href="https://www.wamda.com/ar/2026/09/bekia-secures-765000-launch-b2b-recycling-platform">Wamda: Bekia launches B2B recycling platform</a></li>
+        <li><a href="https://www.connectingafrica.com/innovation-hub/hot-startup-of-the-month-egypt-s-plstka">Connecting Africa: Plstka</a></li>
+        <li><a href="https://www.recyclingstartups.pro/country/Egypt/">Recycling startups in Egypt (directory)</a></li>
+        <li><a href="https://thestartupscene.me/INVESTMENTS/Egypt-s-First-Tech-Recycling-Startup-Transforms-Waste-Into-Rewards">The Startup Scene: Big Scrappers</a></li>
+        <li><a href="https://indiaenvironmentportal.org.in/news-clippings/no-rules-in-this-job-cairos-violent-waste-wars-pit-sorters-against-startups">Cairo's waste wars between sorters and startups</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="newfeatures">
+    <h2>6d. Features added after the competitor review</h2>
+    <p>These come from what the competitors do that EcoPlus did not cover. The use case diagrams, the ERD and the table descriptions above already include the items marked MVP.</p>
+    <div class="box">
+      <table>
+        <tr><th>Feature</th><th>Seen at</th><th>What changes in the system</th><th>When</th></tr>
+        <tr><td>Loyalty-card style points</td><td>Plstka (gamified)</td><td>First version: users only earn points, see their level and the leaderboard. Nothing to spend yet, so no extra tables.</td><td>MVP</td></tr>
+        <tr><td>Redeem points for rewards (vouchers, airtime, partner discounts)</td><td>Bekia, Plstka</td><td>Later it needs two new tables, a reward catalog and a redemption record, and each redemption writes a negative ledger row. Left out of the first version on purpose.</td><td>After the pilot</td></tr>
+        <tr><td>Impact report for businesses (kg recycled, estimated CO2 saved)</td><td>Bekia's sustainability reports for companies</td><td>New column <code>co2_kg_per_kg</code> on <code>MATERIAL_TYPE</code>; report computed from weighing records. The CO2 numbers need a documented source.</td><td>MVP</td></tr>
+        <tr><td>More materials: used oil, electronics</td><td>Bekia</td><td>New rows in <code>MATERIAL_TYPE</code>. Electronics and oil may need special handling and permits, so check before accepting them.</td><td>After the pilot</td></tr>
+        <tr><td>Request by phone or WhatsApp, created by staff</td><td>Go Clean, Bekia</td><td>New column <code>channel</code> on <code>PICKUP_REQUEST</code>; new admin use case "Create request for a customer"</td><td>MVP</td></tr>
+        <tr><td>One-time handover code at pickup</td><td>Your own earlier comparison</td><td>New column <code>handover_code</code> on <code>SHIPMENT</code>; the driver enters the code the customer gives</td><td>MVP</td></tr>
+        <tr><td>Cash payout to a wallet or bank account</td><td>Bekia, Big Scrappers</td><td>Needs a payment provider and probably legal and financial approval. Not modeled yet.</td><td>Later, after legal check</td></tr>
+        <tr><td>Drop-off points or reverse vending machines</td><td>Dawarha</td><td>Needs hardware and locations. Only worth it after the pickup model works.</td><td>Later</td></tr>
+        <tr><td>Demand forecast and heatmaps, dynamic prices</td><td>Your earlier comparison</td><td>Needs several months of real pilot data first.</td><td>Later</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="feasibility">
+    <h2>7. Feasibility and capital</h2>
+    <p>Startup capital, monthly running cost, revenue, break-even and payback for a pilot in one district. Change any assumption and everything recalculates. Amounts are in EGP.</p>
+    <div class="notice">Every number in the assumptions is a <strong>placeholder chosen to make the model run</strong>. None comes from a quote or market data. Replace them with real quotes (warehouse rent, vehicles, salaries, buyer price per material) before using this in the report or with a partner.</div>
+    <div class="box"><div class="groups" id="groups"></div></div>
+    <div class="tiles" id="tiles"></div>
+    <p id="capacityNote"></p>
+    <h3>Volume scenarios (fixed costs unchanged)</h3>
+    <div class="box"><table id="scen"></table></div>
+    <div class="two">
+      <div class="box"><h3>Startup capital</h3><table id="startup"></table></div>
+      <div class="box"><h3>Monthly running cost</h3><table id="monthly"></table></div>
+    </div>
+    <h3>Main risks</h3>
+    <div class="box two">
+      <ul>
+        <li><strong>Low value per kg.</strong> Most recyclables sell for little, so volume and material mix decide profit. Business suppliers with large loads matter more than households.</li>
+        <li><strong>Contamination.</strong> Rejected material is cost with no revenue.</li>
+        <li><strong>Driver utilisation.</strong> Few stops per driver makes every kg expensive. Merge nearby requests.</li>
+      </ul>
+      <ul>
+        <li><strong>Price swings.</strong> Agree price floors or monthly contracts with factories.</li>
+        <li><strong>Licensing.</strong> Confirm with the Waste Management Regulatory Authority and the local district what a collection and storage business needs. Not verified here.</li>
+        <li><strong>Reward cost.</strong> Points that cost real money must stay below what the material earns.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="plan">
+    <h2>8. Execution plan</h2>
+    <p>Two tracks run together. The academic track produces the graduation deliverables. The business track proves that the idea works with real people and real prices before any serious money is spent. Durations are rough estimates to adjust to your semester.</p>
+    <div class="box">
+      <table>
+        <tr><th>Step</th><th>Academic track</th><th>Business track</th><th>Rough time</th></tr>
+        <tr><td>0. Align</td><td>Confirm the university's required format and scope with the supervisor</td><td>Agree in writing with the doctor on role, share and who funds what</td><td>1 to 2 weeks</td></tr>
+        <tr><td>1. Validate</td><td>Finish the diagrams, SRS and feasibility using real quotes</td><td>Collect warehouse, vehicle and salary quotes; get written buyer prices from 2 or 3 factories; talk to 5 to 10 cafés/supermarkets</td><td>3 to 4 weeks</td></tr>
+        <tr><td>2. Build the core</td><td>Backend and database, login and roles, shipments with QR, weighing, points ledger, warehouse</td><td>Pick the pilot district and the first suppliers</td><td>6 to 8 weeks</td></tr>
+        <tr><td>3. Build the rest</td><td>Mobile app screens, driver stops (start with manual order, then Routes API), factory orders, admin dashboard</td><td>Register the company and ask about permits</td><td>6 to 8 weeks</td></tr>
+        <tr><td>4. AI</td><td>Start with a pretrained classifier plus manual type selection; collect real bag photos for training; add fill level and contamination</td><td>Use pilot bags as the training and test data</td><td>In parallel from step 2</td></tr>
+        <tr><td>5. Micro pilot</td><td>Test, measure AI estimate vs actual weight, record results for the report</td><td>Small rented space, 1 vehicle or per-trip driver, 1 employee, anchor suppliers only</td><td>4 to 8 weeks</td></tr>
+        <tr><td>6. Decide</td><td>Final report and defense with real pilot numbers</td><td>Use pilot cost and revenue to decide whether to scale: more drivers, balers, second district</td><td>After the pilot</td></tr>
+      </table>
+    </div>
+    <h3>Build order for the software</h3>
+    <div class="box two">
+      <ul>
+        <li>Login, roles, JWT.</li>
+        <li>Shipments, QR codes, statuses.</li>
+        <li>Weighing record and append-only points ledger.</li>
+        <li>Warehouse batches and stock.</li>
+      </ul>
+      <ul>
+        <li>Driver stops and route ordering.</li>
+        <li>AI bag scan with manual fallback.</li>
+        <li>Factory catalog and orders.</li>
+        <li>Admin dashboard and notifications.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Decisions that block progress</h3>
+      <ul>
+        <li>Who is on the team and who owns backend, mobile and AI.</li>
+        <li>The partnership terms with the doctor (money, share, responsibilities), written and signed.</li>
+        <li>The pilot district and the first businesses that will give material.</li>
+        <li>At least one factory willing to quote a buying price in writing.</li>
+      </ul>
+    </div>
+  </section>
+  <section id="stack">
+    <h2>9. Technology stack and hosting</h2>
+    <p>Your guess is right: Flutter for the apps, Node.js for the API, PostgreSQL for data, Coolify for hosting. This is what I checked online and what each choice depends on.</p>
+    <div class="box">
+      <table>
+        <tr><th>Layer</th><th>Choice</th><th>Notes from research</th></tr>
+        <tr><td>Mobile and web</td><td>Flutter. One codebase for Android, iOS, and a Flutter Web build for Admin and Factory.</td><td>Comparisons agree Flutter fits best when web is a first-class target and the team has no JavaScript background. If your team already knows React, React Native is the alternative, but its web support is weaker. Most of those sources are agency blogs, so treat them as opinion.</td></tr>
+        <tr><td>Backend</td><td>Node.js REST API (NestJS or Express), JWT with roles, Zod validation, Swagger docs</td><td>Matches the agreed stack in the presentation.</td></tr>
+        <tr><td>Database</td><td>PostgreSQL with Prisma ORM</td><td>Prisma now documents a geometry field and an official PostGIS extension, but older pages say PostGIS is unsupported and I could not confirm the release status. For the MVP keep plain <code>lat</code> and <code>lng</code> columns, as in the ERD, and add PostGIS later if you need nearest-point queries.</td></tr>
+        <tr><td>Hosting</td><td>Coolify on one VPS, running the API and PostgreSQL as separate resources</td><td>Coolify's docs list 2 CPU cores and 2 GB RAM as the minimum. They disagree on disk (10 GB on one page, 30 GB on another). A third-party starting point for real use is 4 GB RAM and 2 vCPU, or 4 vCPU and 8 GB if you also build images on the same server. Use a fresh server. Set up automatic database backups and test a restore before the pilot.</td></tr>
+        <tr><td>AI on the phone</td><td>TFLite model through <code>tflite_flutter</code>, trained with PyTorch</td><td>Run inference in a separate Isolate so the screen stays smooth. I could not confirm whether the plugin has moved to LiteRT, so check pub.dev when you start.</td></tr>
+        <tr><td>Maps and routes</td><td>Google Routes API, <code>google_maps_flutter</code></td><td>One request allows at most 25 intermediate waypoints, which fits the 25 stops per driver used in the feasibility model. Free usage is described differently by different sources (a flat monthly credit versus per-SKU free caps), so read Google's pricing page before relying on a number.</td></tr>
+        <tr><td>Notifications and images</td><td>FCM for push, Socket.io for live status, Firebase or Cloudinary for images</td><td>As in the agreed presentation.</td></tr>
+        <tr><td>Quality</td><td>Docker, GitHub Actions for tests and deploy, separate dev and production environments</td><td>Coolify can deploy from the GitHub repo on every push to a branch.</td></tr>
+      </table>
+    </div>
+    <p>Not researched yet: server location and latency for users in Egypt, and the exact monthly VPS price. Get both before you rent a server.</p>
+  </section>
+
+  <section id="dbplan">
+    <h2>10. Database implementation</h2>
+    <p>The ERD becomes a Prisma schema, then migrations, then seed data. These are the rules the database itself should enforce, so a bug in the app cannot break them.</p>
+    <div class="box two">
+      <ul>
+        <li><strong>Schema.</strong> One Prisma model per ERD table, with the foreign keys shown.</li>
+        <li><strong>Migrations.</strong> Every change is a migration file in Git. Never edit the database by hand.</li>
+        <li><strong>Seed data.</strong> Levels (Bronze to Platinum with multipliers), material types with point factors and prices, one admin, one warehouse, test users for each role.</li>
+        <li><strong>Environments.</strong> Separate dev, staging and production databases.</li>
+      </ul>
+      <ul>
+        <li><strong>Append-only ledger.</strong> Block UPDATE and DELETE on <code>POINTS_LEDGER</code> for the app's database user. Corrections are new rows.</li>
+        <li><strong>One transaction for weighing.</strong> Weighing record, points, batch and stock update all succeed or all roll back.</li>
+        <li><strong>Constraints.</strong> Unique <code>qr_code</code>, weight greater than zero, one weighing per shipment.</li>
+        <li><strong>Indexes.</strong> Shipment status and QR, route date, ledger by user, batch by material and warehouse.</li>
+        <li><strong>Backups.</strong> Scheduled, stored off the server, and a restore tested once.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="phases">
+    <h2>11. Delivery phases and task breakdown</h2>
+    <p>Each phase ends with something that works end to end. Each row becomes a group of tasks (an epic with small tasks under it) when we set up Linear. Weeks are rough estimates for a small team and should be adjusted to your semester.</p>
+    <div class="box">
+      <table>
+        <tr><th>Phase</th><th>Work</th><th>Done when</th><th>Weeks</th></tr>
+        <tr><td>0. Foundations</td><td>Git repo, Flutter and Node projects, Docker, CI, Coolify server, Prisma schema and migrations, seed data, login with roles, Swagger</td><td>A test user of each role can log in against the deployed staging API</td><td>2 to 3</td></tr>
+        <tr><td>1. Core flow without AI</td><td>Citizen picks material type by hand, requests pickup, shipment with QR, employee scans and weighs, points ledger, warehouse batches and stock</td><td>One bag goes from request to points and stock, with real data in the database</td><td>4 to 5</td></tr>
+        <tr><td>2. Logistics</td><td>Vehicles and drivers, route stops (manual order first, then Routes API), driver app screens, push notifications, merge nearby requests</td><td>A driver follows an ordered list of stops and marks them collected</td><td>3 to 4</td></tr>
+        <tr><td>3. Factory and Admin</td><td>Material catalog, orders, invoices, admin dashboard and map, price and level management, impact report</td><td>A factory orders material that exists in stock and the admin sees it live</td><td>3 to 4</td></tr>
+        <tr><td>4. AI</td><td>Collect and label real bag photos, train the classifier, fill level and contamination, TFLite in the app, low-confidence fallback to manual choice</td><td>Measured accuracy on photos not used for training, and AI estimate compared with actual weight</td><td>Parallel from phase 1</td></tr>
+        <tr><td>5. Pilot and hardening</td><td>Tests, security review, backup restore test, small real pilot with anchor suppliers, results for the report</td><td>Pilot numbers replace the placeholders in the feasibility model</td><td>4 to 8</td></tr>
+      </table>
+    </div>
+    <h3>Build status (backend, 27 Oct 2026)</h3>
+    <div class="box">
+      <p><strong>Phase 0, Phase 1 and Phase 2 backend are built and tested locally</strong> (NestJS, Prisma, PostgreSQL): 125 automated tests pass (66 unit, 59 end to end). Linear: MOA-201 to MOA-207, MOA-212 to MOA-221, MOA-227, and for Phase 2 MOA-228 to MOA-232, MOA-234 and MOA-237 are Done. MOA-233 (push) stays open: device tokens exist, but real FCM sending is not built. Not yet verified: Docker build, GitHub CI (no remote yet), Flutter apps, staging on Coolify, the real Google Routes API.</p>
+      <p><strong>Where the built database differs from the ERD above:</strong></p>
+      <ul>
+        <li>24 tables, not 22: added <code>refresh_tokens</code> (hashed, rotated, reuse detection) and <code>device_tokens</code> (phone push tokens).</li>
+        <li><code>users.isActive</code>; <code>bag_scans.source / lat / lng</code>; <code>pickup_requests.createdById</code>; <code>invoices.number / dueAt</code>; <code>weighing_records.materialTypeId</code> (optional).</li>
+        <li>Shipment status adds <code>cancelled</code>: created → assigned | collected | cancelled; assigned → created (taken off a planned route) | collected | cancelled; collected → weighed | rejected.</li>
+        <li>A database trigger blocks UPDATE and DELETE on <code>points_ledger</code>; CHECK constraints guard weights, fill level and points.</li>
+      </ul>
+      <p><strong>Phase 2 rules built:</strong> a route assigns shipments in one transaction and gives each a 6 digit handover code the customer shows the driver; the driver never sees it. Stops are ordered nearest-neighbour (Google Routes API when a key is set, with fallback). Decision rule v2 collects a bag at least 0.3 full when another open shipment is within 150 m (decision <code>merge</code>).</p>
+      <p><strong>Known limits:</strong> photos sit on local disk uncompressed; warehouse changes are only logged until the audit table (Phase 3); staff-created customers have no password until reset exists; rate limiting is per IP; no "customer not home" button for drivers; real FCM sending not built; stop order ignores traffic and capacity.</p>
+    </div>
+    <h3>Sources</h3>
+    <div class="box">
+      <ul>
+        <li><a href="https://coolify.io/docs/get-started/installation">Coolify installation requirements</a></li>
+        <li><a href="https://softteco.com/blog/react-native-vs-flutter">Flutter and React Native comparison (SoftTeco)</a></li>
+        <li><a href="https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/working-with-geometry-fields">Prisma geometry fields</a></li>
+        <li><a href="https://pub.dev/packages/lite_vision_ai">lite_vision_ai on pub.dev (built on tflite_flutter)</a></li>
+        <li><a href="https://developers.google.com/maps/documentation/routes/usage-and-billing">Google Routes API usage and billing</a></li>
+      </ul>
+    </div>
+  </section>
+  <section id="workflow">
+    <h2>12. How we work together</h2>
+    <p>The work is split into tracks. Each track has one owner who decides and is responsible, even when others help. The owner names are blank on purpose: fill them in once the team is confirmed.</p>
+    <div class="box">
+      <table>
+        <tr><th>Track</th><th>What it covers</th><th>Owner</th></tr>
+        <tr><td>Database</td><td>Prisma schema from the ERD, migrations, seed data, indexes, ledger protection, backups</td><td>(fill in)</td></tr>
+        <tr><td>Backend</td><td>Node.js API, login and roles, business rules (weighing transaction, points), Swagger docs</td><td>(fill in)</td></tr>
+        <tr><td>Frontend</td><td>Flutter mobile app for citizens, businesses, drivers and employees; Flutter Web for Admin and Factory</td><td>(fill in)</td></tr>
+        <tr><td>AI</td><td>Photo collection and labeling, model training, TFLite in the app, accuracy measurement</td><td>(fill in)</td></tr>
+        <tr><td>DevOps</td><td>Repository, CI, Docker, Coolify server, environments, monitoring</td><td>(fill in)</td></tr>
+        <tr><td>Design</td><td>Screens in Figma, user flows, app text</td><td>(fill in)</td></tr>
+        <tr><td>Business and operations</td><td>Suppliers, factories, quotes, permits, partner agreement, pilot logistics, finance</td><td>(fill in). Project owner and partner: Mr. Roshdy (confirm role)</td></tr>
+      </table>
+    </div>
+
+    <h3>Who does what in each phase</h3>
+    <div class="box">
+      <table>
+        <tr><th>Phase</th><th>Database</th><th>Backend</th><th>Frontend</th><th>AI</th><th>DevOps</th><th>Business</th></tr>
+        <tr><td>0. Foundations</td><td>Schema, migrations, seed</td><td>Project skeleton, login and roles, Swagger</td><td>Flutter skeleton, login, home screen per role</td><td>Photo guidelines and collection plan</td><td>Repo, CI, Coolify, staging</td><td>Quotes, partner agreement, first supplier talks</td></tr>
+        <tr><td>1. Core flow</td><td>Indexes, ledger protection</td><td>Requests, shipments with QR, weighing transaction, points, batches</td><td>Citizen request, QR view, employee scan and weigh</td><td>Start collecting real bag photos</td><td>Backups</td><td>Sign anchor suppliers</td></tr>
+        <tr><td>2. Logistics</td><td>Route queries and tuning</td><td>Vehicles, routes, Routes API, push, handover code</td><td>Driver screens</td><td>Label photos</td><td>Monitoring</td><td>Choose district, plan drivers</td></tr>
+        <tr><td>3. Factory and Admin</td><td>Reporting queries</td><td>Catalog, orders, invoices, impact report, dashboard data</td><td>Flutter Web for Admin and Factory</td><td>First model trained</td><td>Production environment</td><td>Factory agreements</td></tr>
+        <tr><td>4. AI</td><td>Store scan results</td><td>Scan endpoint, accuracy report</td><td>Scan screen with manual fallback</td><td>Model in the app, measure accuracy</td><td>Model delivery</td><td>Pilot bags as test data</td></tr>
+        <tr><td>5. Pilot</td><td>Restore test</td><td>Bug fixes, security review</td><td>Polish, fixes</td><td>Final accuracy numbers</td><td>Load and uptime check</td><td>Run the pilot, record cost and revenue</td></tr>
+      </table>
+    </div>
+
+    <h3>Rules for working in parallel</h3>
+    <div class="box two">
+      <ul>
+        <li><strong>Database first, then API, then screens.</strong> Nobody changes tables except the Database owner, through a migration.</li>
+        <li><strong>API contract before code.</strong> Backend writes the endpoint in Swagger first. Frontend builds against it with fake data, so both work at the same time.</li>
+        <li><strong>One task, one branch, one pull request.</strong> Branches come from <code>dev</code>. Another person reviews before merging. <code>main</code> is only what has been tested.</li>
+        <li><strong>Small tasks.</strong> A task should take 1 to 3 days. Bigger ones get split.</li>
+      </ul>
+      <ul>
+        <li><strong>Done means:</strong> works on staging, has a test for the business rule, and the Swagger or Figma link is updated.</li>
+        <li><strong>Weekly rhythm:</strong> planning at the start of the week, a short check-in in the middle, a demo of something working at the end.</li>
+        <li><strong>Tasks live in Linear.</strong> One epic per phase and track, each task with an owner and a size. Blocked tasks are marked and raised at the check-in.</li>
+        <li><strong>Decisions are written down</strong> in one place, with the date and who decided.</li>
+      </ul>
+    </div>
+
+    <h3>Where I help</h3>
+    <div class="box">
+      <ul>
+        <li>Draft the Prisma schema, migrations, seed script and API endpoints from this document, for the owner to review and run.</li>
+        <li>Write Flutter screens and tests, and review pull requests.</li>
+        <li>Create the Linear epics and tasks from the phase table once the team and owners are confirmed.</li>
+        <li>Keep this document updated when a decision changes.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ---------- UML use case diagrams ---------- */
+(function () {
+  var RX = 118, RY = 28, GAP = 88, TOP = 90, CX = 380, W = 780, INC = '«include»', EXT = '«extend»';
+
+  function wrap(s) {
+    if (s.length <= 21) return [s];
+    var m = Math.floor(s.length / 2), a = s.lastIndexOf(' ', m), b = s.indexOf(' ', m);
+    var i = a < 0 ? b : (b < 0 ? a : (m - a <= b - m ? a : b));
+    return [s.slice(0, i), s.slice(i + 1)];
+  }
+  function edge(c, px, py) {
+    var dx = px - c.x, dy = py - c.y, t = 1 / Math.sqrt(dx * dx / (RX * RX) + dy * dy / (RY * RY));
+    return [c.x + dx * t, c.y + dy * t];
+  }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function draw(elId, cfg) {
+    var idx = {}, cs = cfg.cases;
+    cs.forEach(function (c, i) { idx[c.id] = i; c.x = CX; c.y = TOP + i * GAP; });
+    var H = TOP + cs.length * GAP + 10;
+
+    function place(list, x) {
+      list.forEach(function (a) {
+        a.x = x;
+        a.y = a.cases.reduce(function (s, id) { return s + cs[idx[id]].y; }, 0) / a.cases.length;
+      });
+      list.sort(function (p, q) { return p.y - q.y; });
+      for (var i = 0; i < list.length; i++) {
+        var min = i === 0 ? 70 : list[i - 1].y + 120;
+        if (list[i].y < min) list[i].y = min;
+      }
+      if (list.length) H = Math.max(H, list[list.length - 1].y + 80);
+    }
+    place(cfg.left, 60);
+    place(cfg.right || [], W - 60);
+
+    var out = [];
+    out.push('<rect class="uc-boundary" x="150" y="18" width="460" height="' + (H - 36) + '" rx="4"/>');
+    out.push('<text class="uc-title" x="380" y="42">' + esc(cfg.title) + '</text>');
+
+    // actor to use case lines
+    function links(list, side) {
+      list.forEach(function (a) {
+        a.cases.forEach(function (id) {
+          var c = cs[idx[id]], sx = a.x + side * 14, sy = a.y - 6, ex = c.x - side * RX;
+          out.push('<line class="uc-line" x1="' + sx + '" y1="' + sy + '" x2="' + ex + '" y2="' + c.y + '"/>');
+        });
+      });
+    }
+    links(cfg.left, 1); links(cfg.right || [], -1);
+
+    // relationships
+    cfg.rels.forEach(function (r) {
+      var a = cs[idx[r[0]]], b = cs[idx[r[1]]], label = r[2] === 'include' ? INC : EXT, d, lx, ly;
+      if (Math.abs(idx[r[0]] - idx[r[1]]) === 1) {
+        var p1 = edge(a, b.x, b.y), p2 = edge(b, a.x, a.y);
+        d = 'M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + ' L' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+        lx = CX + 8; ly = (a.y + b.y) / 2 + 4;
+      } else {
+        var sx = CX + RX, my = (a.y + b.y) / 2, qx = sx + 70;
+        d = 'M' + sx + ' ' + a.y + ' Q' + qx + ' ' + my + ' ' + sx + ' ' + b.y;
+        lx = sx + 40; ly = my + 4;
+      }
+      out.push('<path class="uc-rel" d="' + d + '" marker-end="url(#arr)"/>');
+      out.push('<text class="uc-label" x="' + lx + '" y="' + ly + '">' + label + '</text>');
+    });
+
+    // use cases
+    cs.forEach(function (c) {
+      out.push('<ellipse class="uc-ell" cx="' + c.x + '" cy="' + c.y + '" rx="' + RX + '" ry="' + RY + '"/>');
+      var ls = wrap(c.label);
+      ls.forEach(function (t, i) {
+        out.push('<text class="uc-text" x="' + c.x + '" y="' + (c.y + 4 + (i - (ls.length - 1) / 2) * 14) + '">' + esc(t) + '</text>');
+      });
+    });
+
+    // actors
+    function actors(list, cls) {
+      list.forEach(function (a) {
+        var x = a.x, y = a.y;
+        out.push('<g class="' + cls + '">' +
+          '<circle class="uc-fig" cx="' + x + '" cy="' + (y - 26) + '" r="9"/>' +
+          '<path class="uc-fig" d="M' + x + ' ' + (y - 17) + ' V' + (y + 8) + ' M' + (x - 15) + ' ' + (y - 8) + ' H' + (x + 15) + ' M' + x + ' ' + (y + 8) + ' L' + (x - 12) + ' ' + (y + 28) + ' M' + x + ' ' + (y + 8) + ' L' + (x + 12) + ' ' + (y + 28) + '"/>' +
+          '<text class="uc-text" x="' + x + '" y="' + (y + 46) + '">' + esc(a.name) + '</text></g>');
+      });
+    }
+    actors(cfg.left, 'uc-prim'); actors(cfg.right || [], 'uc-ext');
+
+    document.getElementById(elId).innerHTML =
+      '<svg class="uc" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(cfg.title) + '">' +
+      '<defs><marker id="arr-' + elId + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="uc-arrow" d="M1 1 L9 5 L1 9"/></marker></defs>' +
+      out.join('').replace(/url\(#arr\)/g, 'url(#arr-' + elId + ')') + '</svg>';
+  }
+
+  draw('uc1', {
+    title: 'Citizen / Business App',
+    left: [
+      { name: 'Citizen', cases: ['login', 'request', 'scan', 'track', 'points', 'impact', 'board', 'map', 'notif'] },
+      { name: 'Business', cases: ['login', 'request', 'scan', 'track', 'points', 'impact', 'inv', 'notif'] }
+    ],
+    right: [
+      { name: 'AI Service', cases: ['scan'] },
+      { name: 'FCM', cases: ['notif'] }
+    ],
+    cases: [
+      { id: 'login', label: 'Register and login' },
+      { id: 'request', label: 'Request pickup' },
+      { id: 'scan', label: 'Scan bag' },
+      { id: 'review', label: 'Review AI result' },
+      { id: 'pick', label: 'Pick type manually' },
+      { id: 'track', label: 'Track shipment and QR' },
+      { id: 'points', label: 'View points and level' },
+      { id: 'impact', label: 'View impact report' },
+      { id: 'board', label: 'View leaderboard' },
+      { id: 'map', label: 'View collection points map' },
+      { id: 'inv', label: 'View agreement and invoices' },
+      { id: 'notif', label: 'Receive notifications' }
+    ],
+    rels: [['request', 'scan', 'include'], ['scan', 'review', 'include'], ['pick', 'review', 'extend']]
+  });
+
+  draw('uc2', {
+    title: 'Field and Warehouse Operations',
+    left: [
+      { name: 'Driver', cases: ['stops', 'openmap', 'collect'] },
+      { name: 'Employee', cases: ['qr', 'weigh', 'reject', 'batch', 'list'] }
+    ],
+    right: [{ name: 'Routes API', cases: ['stops'] }],
+    cases: [
+      { id: 'stops', label: "View today's ordered stops" },
+      { id: 'openmap', label: 'Open route in Maps' },
+      { id: 'collect', label: 'Confirm pickup collected' },
+      { id: 'qr', label: 'Scan shipment QR' },
+      { id: 'weigh', label: 'Weigh shipment' },
+      { id: 'reject', label: 'Accept or reject contamination' },
+      { id: 'award', label: 'Award points' },
+      { id: 'batch', label: 'Create warehouse batch' },
+      { id: 'stock', label: 'Update stock' },
+      { id: 'list', label: 'View pickup point shipments' }
+    ],
+    rels: [['weigh', 'qr', 'include'], ['weigh', 'reject', 'include'], ['weigh', 'award', 'include'], ['batch', 'stock', 'include']]
+  });
+
+  draw('uc3', {
+    title: 'Management and Factory Portal',
+    left: [
+      { name: 'Admin', cases: ['dash', 'users', 'levels', 'prices', 'onbehalf', 'amap', 'assign', 'cap'] },
+      { name: 'Factory', cases: ['catalog', 'order', 'ftrack', 'finv'] }
+    ],
+    cases: [
+      { id: 'dash', label: 'View live dashboard' },
+      { id: 'compare', label: 'Compare AI estimate vs actual weight' },
+      { id: 'users', label: 'Manage users and roles' },
+      { id: 'levels', label: 'Set levels and point factors' },
+      { id: 'prices', label: 'Set material prices' },
+      { id: 'onbehalf', label: 'Create request for a customer' },
+      { id: 'amap', label: 'View collection points map' },
+      { id: 'assign', label: 'Assign drivers and routes' },
+      { id: 'cap', label: 'Monitor warehouse capacity' },
+      { id: 'catalog', label: 'Browse material catalog' },
+      { id: 'order', label: 'Place order' },
+      { id: 'ftrack', label: 'Track order status' },
+      { id: 'finv', label: 'View invoices' }
+    ],
+    rels: [['dash', 'compare', 'include'], ['order', 'catalog', 'include']]
+  });
+})();
+
+/* ---------- Feasibility model ---------- */
+(function () {
+  var F = [
+    ['Volume', 'hhStops', 'Household pickups per day', 30],
+    ['Volume', 'hhKg', 'Avg kg per household pickup', 6],
+    ['Volume', 'bizStops', 'Business pickups per day', 10],
+    ['Volume', 'bizKg', 'Avg kg per business pickup', 60],
+    ['Volume', 'days', 'Operating days per month', 26],
+    ['Volume', 'accept', 'Accepted after weighing (%)', 90],
+    ['Revenue', 'price', 'Avg selling price (EGP/kg)', 5],
+    ['Revenue', 'reward', 'Rewards paid, % of revenue', 15],
+    ['Operations', 'stopsPerDriver', 'Stops one driver can do per day', 25],
+    ['Operations', 'drivers', 'Drivers', 2],
+    ['Operations', 'employees', 'Warehouse employees', 2],
+    ['Operations', 'vehicles', 'Vehicles', 2],
+    ['Monthly cost', 'rent', 'Warehouse rent', 15000],
+    ['Monthly cost', 'driverSal', 'Salary per driver', 7000],
+    ['Monthly cost', 'empSal', 'Salary per employee', 6000],
+    ['Monthly cost', 'fuel', 'Fuel per vehicle', 6000],
+    ['Monthly cost', 'maint', 'Maintenance per vehicle', 1500],
+    ['Monthly cost', 'cloud', 'Servers, maps API, SMS', 3000],
+    ['Monthly cost', 'marketing', 'Marketing', 5000],
+    ['Monthly cost', 'admin', 'Admin, utilities, other', 3000],
+    ['Startup', 'depositMonths', 'Rent paid upfront (months)', 3],
+    ['Startup', 'fitout', 'Warehouse fit-out', 30000],
+    ['Startup', 'scale', 'Industrial scale', 15000],
+    ['Startup', 'baler', 'Baler / press', 80000],
+    ['Startup', 'shelving', 'Racks, bins, bags, safety gear', 25000],
+    ['Startup', 'vehPrice', 'Price per vehicle', 350000],
+    ['Startup', 'software', 'App development (0 if built by the team)', 0],
+    ['Startup', 'legal', 'Registration, permits, legal', 20000],
+    ['Startup', 'wcMonths', 'Working capital reserve (months of cost)', 3],
+    ['Startup', 'contingency', 'Contingency (%)', 15]
+  ];
+  var groups = {};
+  F.forEach(function (f) { (groups[f[0]] = groups[f[0]] || []).push(f); });
+  var root = document.getElementById('groups');
+  Object.keys(groups).forEach(function (g) {
+    var d = document.createElement('div'); d.className = 'group';
+    d.innerHTML = '<h3>' + g + '</h3>' + groups[g].map(function (f) {
+      return '<div class="field"><label for="' + f[1] + '">' + f[2] + '</label><input id="' + f[1] + '" type="number" inputmode="decimal" min="0" step="any" value="' + f[3] + '"></div>';
+    }).join('');
+    root.appendChild(d);
+  });
+
+  function val(id) { var v = parseFloat(document.getElementById(id).value); return isFinite(v) && v >= 0 ? v : 0; }
+  function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
+  function sgn(n) { return (n < 0 ? '-' : '') + fmt(Math.abs(n)); }
+  function tile(k, v, s) { return '<div class="tile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + s + '</div></div>'; }
+
+  function calc(a, mult) {
+    var kgMonth = (a.hhStops * a.hhKg + a.bizStops * a.bizKg) * mult * a.days;
+    var revenue = kgMonth * a.accept / 100 * a.price;
+    var rewards = revenue * a.reward / 100;
+    var fixed = a.rent + a.drivers * a.driverSal + a.employees * a.empSal + a.vehicles * (a.fuel + a.maint) + a.cloud + a.marketing + a.admin;
+    var contrib = a.price * (a.accept / 100) * (1 - a.reward / 100);
+    return { kgMonth: kgMonth, revenue: revenue, rewards: rewards, fixed: fixed, net: revenue - rewards - fixed, beKg: contrib > 0 ? fixed / contrib : Infinity };
+  }
+
+  function render() {
+    var a = {}; F.forEach(function (f) { a[f[1]] = val(f[1]); });
+    var m = calc(a, 1);
+    var items = [
+      ['Rent paid upfront', a.rent * a.depositMonths], ['Warehouse fit-out', a.fitout], ['Scale', a.scale],
+      ['Baler / press', a.baler], ['Racks, bins, safety gear', a.shelving], ['Vehicles (' + a.vehicles + ')', a.vehicles * a.vehPrice],
+      ['App development', a.software], ['Registration and permits', a.legal]
+    ];
+    var sub = items.reduce(function (s, i) { return s + i[1]; }, 0);
+    var wc = m.fixed * a.wcMonths, cont = (sub + wc) * a.contingency / 100, capital = sub + wc + cont;
+    var payback = m.net > 0 ? capital / m.net : null;
+
+    document.getElementById('startup').innerHTML =
+      items.map(function (i) { return '<tr><td>' + i[0] + '</td><td class="n">' + fmt(i[1]) + '</td></tr>'; }).join('') +
+      '<tr><td>Working capital reserve (' + a.wcMonths + ' months)</td><td class="n">' + fmt(wc) + '</td></tr>' +
+      '<tr><td>Contingency (' + a.contingency + '%)</td><td class="n">' + fmt(cont) + '</td></tr>' +
+      '<tr class="total"><td>Total capital needed</td><td class="n">' + fmt(capital) + '</td></tr>';
+
+    var mrows = [['Warehouse rent', a.rent], ['Drivers', a.drivers * a.driverSal], ['Employees', a.employees * a.empSal],
+      ['Fuel', a.vehicles * a.fuel], ['Vehicle maintenance', a.vehicles * a.maint], ['Servers, maps API, SMS', a.cloud],
+      ['Marketing', a.marketing], ['Admin and other', a.admin]];
+    document.getElementById('monthly').innerHTML =
+      mrows.map(function (i) { return '<tr><td>' + i[0] + '</td><td class="n">' + fmt(i[1]) + '</td></tr>'; }).join('') +
+      '<tr class="total"><td>Fixed cost per month</td><td class="n">' + fmt(m.fixed) + '</td></tr>' +
+      '<tr><td>Rewards (variable)</td><td class="n">' + fmt(m.rewards) + '</td></tr>';
+
+    document.getElementById('tiles').innerHTML =
+      tile('Capital needed', fmt(capital), 'EGP, incl. ' + a.wcMonths + ' months reserve') +
+      tile('Monthly revenue', fmt(m.revenue), fmt(m.kgMonth) + ' kg collected') +
+      tile('Monthly net', '<span class="' + (m.net >= 0 ? 'good' : 'bad') + '">' + sgn(m.net) + '</span>', 'after fixed cost and rewards') +
+      tile('Break-even volume', isFinite(m.beKg) ? fmt(m.beKg) + ' kg' : 'n/a', 'per month; you collect ' + fmt(m.kgMonth)) +
+      tile('Payback', payback ? payback.toFixed(1) + ' months' : 'never at this volume', 'capital ÷ monthly net');
+
+    var stops = a.hhStops + a.bizStops, cap = a.drivers * a.stopsPerDriver, need = a.stopsPerDriver > 0 ? Math.ceil(stops / a.stopsPerDriver) : 0;
+    var cn = document.getElementById('capacityNote');
+    if (stops > cap) { cn.className = 'bad'; cn.textContent = 'Capacity problem: ' + stops + ' stops a day need ' + need + ' drivers, but the model has ' + a.drivers + '.'; }
+    else { cn.className = ''; cn.textContent = 'Capacity check: ' + a.drivers + ' drivers can serve ' + cap + ' stops a day; you plan ' + stops + '.'; }
+
+    document.getElementById('scen').innerHTML =
+      '<tr><th>Scenario</th><th class="n">kg / month</th><th class="n">Revenue</th><th class="n">Net / month</th><th class="n">Driver capacity</th></tr>' +
+      [0.5, 1, 1.5, 2].map(function (k) {
+        var r = calc(a, k), st = stops * k;
+        return '<tr><td>' + (k * 100) + '% of base' + (k === 1 ? ' (base)' : '') + '</td><td class="n">' + fmt(r.kgMonth) + '</td><td class="n">' + fmt(r.revenue) +
+          '</td><td class="n ' + (r.net >= 0 ? 'good' : 'bad') + '">' + sgn(r.net) + '</td><td class="n ' + (st > cap ? 'warn' : '') + '">' + (st > cap ? 'needs more drivers' : 'ok') + '</td></tr>';
+      }).join('');
+  }
+  document.getElementById('groups').addEventListener('input', render);
+  render();
+})();
+
+/* ---------- Database dictionary ---------- */
+(function () {
+  var T = [
+    ['USER', 'Everyone who can log in. One table for all roles; the role column decides which screens they see.', [
+      ['id', 'int', 'PK', 'Unique number of the user'],
+      ['name', 'string', '', 'Full name'],
+      ['phone', 'string', '', 'Phone number, can be used to log in'],
+      ['email', 'string', '', 'Email address'],
+      ['password_hash', 'string', '', 'Scrambled password (bcrypt). The real password is never stored'],
+      ['role', 'string', '', 'citizen, business, driver, employee, admin or factory'],
+      ['factory_id', 'int', 'FK', 'Only for factory staff: which factory they belong to. Empty for everyone else'],
+      ['created_at', 'datetime', '', 'When the account was created']
+    ], 'A user has at most one profile of its kind (citizen, business, driver or employee). A factory has many users.'],
+    ['CITIZEN_PROFILE', 'Extra data for users with the citizen role.', [
+      ['user_id', 'int', 'PK, FK', 'Points to USER. Same number as the user'],
+      ['level_id', 'int', 'FK', 'Current level (Bronze, Silver, Gold, Platinum)'],
+      ['total_points', 'int', '', 'Running total of points, for fast display'],
+      ['address', 'string', '', 'Home address'],
+      ['lat / lng', 'float', '', 'Home location for pickups and the map']
+    ], 'Each citizen is at one level. A level has many citizens. A citizen makes many bag scans.'],
+    ['BUSINESS_PROFILE', 'Extra data for supermarkets, cafés and other business suppliers.', [
+      ['user_id', 'int', 'PK, FK', 'Points to USER'],
+      ['business_name', 'string', '', 'Name of the shop or café'],
+      ['business_type', 'string', '', 'supermarket, cafe, hotel and so on'],
+      ['agreement_ref', 'string', '', 'Reference of the signed collection agreement'],
+      ['lat / lng', 'float', '', 'Location of the business']
+    ], 'A business makes many bag scans, like a citizen.'],
+    ['LEVEL', 'The reward levels. Higher level means more points for the same weight.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['name', 'string', '', 'Bronze, Silver, Gold, Platinum'],
+      ['min_points', 'int', '', 'Points needed to reach this level'],
+      ['multiplier', 'float', '', 'Number that multiplies the points earned, such as 1.0 or 1.2']
+    ], 'Admin can change these values without changing code.'],
+    ['BAG_SCAN', 'One photo of a bag and what the AI thought of it.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['user_id', 'int', 'FK', 'Who took the photo (citizen or business)'],
+      ['image_url', 'string', '', 'Where the photo is stored'],
+      ['fill_level', 'float', '', 'How full the bag is, 0 to 1'],
+      ['content_type', 'string', '', 'Main material the AI sees, such as plastic or paper'],
+      ['contamination', 'float', '', 'How dirty or mixed it looks, 0 to 1'],
+      ['confidence', 'float', '', 'How sure the AI is, 0 to 1. Low means ask the user to check'],
+      ['scanned_at', 'datetime', '', 'When the photo was taken']
+    ], 'A scan can lead to one pickup request, or to none if the bag was not full enough.'],
+    ['PICKUP_REQUEST', 'A request to collect a scanned bag, plus the decision made about it.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['scan_id', 'int', 'FK', 'The scan this request comes from'],
+      ['decision', 'string', '', 'ready, wait or merge (combine with nearby requests)'],
+      ['status', 'string', '', 'open, scheduled, collected or cancelled'],
+      ['channel', 'string', '', 'app, phone or whatsapp. Lets staff create a request for a customer without a smartphone'],
+      ['requested_at', 'datetime', '', 'When the user asked']
+    ], 'A request becomes exactly one shipment once it is ready.'],
+    ['SHIPMENT', 'The physical bag on its way to the warehouse. This is what the QR code identifies.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['request_id', 'int', 'FK', 'The request this shipment fulfils'],
+      ['qr_code', 'string', '', 'Unique code printed or shown as a QR'],
+      ['gps_lat / gps_lng', 'float', '', 'Pickup location'],
+      ['source_type', 'string', '', 'household or business'],
+      ['handover_code', 'string', '', 'One-time code the customer tells the driver at pickup, to prove the handover'],
+      ['status', 'string', '', 'created, assigned, collected, weighed or rejected']
+    ], 'A shipment appears in at most one route stop and has at most one weighing record.'],
+    ['VEHICLE', 'A collection vehicle owned or rented by the business.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['plate', 'string', '', 'Plate number'],
+      ['type', 'string', '', 'pickup truck, van, tricycle...'],
+      ['capacity_kg', 'float', '', 'How much it can carry']
+    ], 'A vehicle is used on many routes over time.'],
+    ['DRIVER', 'Extra data for users with the driver role.', [
+      ['user_id', 'int', 'PK, FK', 'Points to USER'],
+      ['license_no', 'string', '', 'Driving licence number'],
+      ['status', 'string', '', 'available, on route or off duty']
+    ], 'A driver has many routes, one per day or trip.'],
+    ['ROUTE', 'One driver, one vehicle, one day: the list of stops to visit.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['driver_id', 'int', 'FK', 'Who drives it'],
+      ['vehicle_id', 'int', 'FK', 'Which vehicle'],
+      ['route_date', 'date', '', 'The day of the route'],
+      ['status', 'string', '', 'planned, in progress or done']
+    ], 'A route contains many stops.'],
+    ['ROUTE_STOP', 'One stop on a route, linked to one shipment.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['route_id', 'int', 'FK', 'The route it belongs to'],
+      ['shipment_id', 'int', 'FK', 'The shipment to pick up'],
+      ['stop_order', 'int', '', 'Position in the visiting order (1, 2, 3...)'],
+      ['collected_at', 'datetime', '', 'When the driver marked it collected. Empty until then']
+    ], 'This is the table the driver app reads to show "today\'s stops".'],
+    ['EMPLOYEE', 'Extra data for warehouse staff who weigh and confirm shipments.', [
+      ['user_id', 'int', 'PK, FK', 'Points to USER'],
+      ['warehouse_id', 'int', 'FK', 'Where they work'],
+      ['position', 'string', '', 'Job title']
+    ], 'An employee performs many weighing records.'],
+    ['WEIGHING_RECORD', 'The official weighing of a shipment. This is the ground truth the whole system trusts.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['shipment_id', 'int', 'FK', 'The shipment that was weighed'],
+      ['employee_id', 'int', 'FK', 'Who weighed it'],
+      ['material_type_id', 'int', 'FK', 'What the material really is'],
+      ['batch_id', 'int', 'FK', 'The warehouse batch it was added to. Empty if rejected'],
+      ['actual_weight_kg', 'float', '', 'Real weight on the scale'],
+      ['grade', 'string', '', 'Quality grade such as A, B or C'],
+      ['accepted', 'boolean', '', 'False if the material was too contaminated'],
+      ['reject_reason', 'string', '', 'Why it was rejected, if it was'],
+      ['weighed_at', 'datetime', '', 'When it was weighed']
+    ], 'Comparing actual_weight_kg with the AI estimate on the scan is how we measure the AI.'],
+    ['POINTS_LEDGER', 'Every point ever given or taken, one row per event. Never edited.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['user_id', 'int', 'FK', 'Who gets the points'],
+      ['weighing_id', 'int', 'FK', 'The weighing that earned them'],
+      ['points', 'int', '', 'Positive to add, negative to correct a mistake'],
+      ['reason', 'string', '', 'earned or correction'],
+      ['created_at', 'datetime', '', 'When the row was written']
+    ], 'Points = weight × material factor × level multiplier.'],
+    ['MATERIAL_TYPE', 'The kinds of material the business handles and their money rules.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['name', 'string', '', 'PET plastic, cardboard, glass, aluminium...'],
+      ['point_factor', 'float', '', 'Points per kg before the level multiplier'],
+      ['price_per_kg', 'float', '', 'Selling price to factories'],
+      ['co2_kg_per_kg', 'float', '', 'Estimated CO2 saved per kg recycled, for the impact report. Must come from a documented source']
+    ], 'Used by weighing, batches and factory orders, so a price change is made in one place.'],
+    ['WAREHOUSE', 'A storage place.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['name', 'string', '', 'Name of the warehouse'],
+      ['address', 'string', '', 'Address'],
+      ['capacity_kg', 'float', '', 'Maximum stock. Used for capacity alerts']
+    ], 'A warehouse stores many batches and employs many employees.'],
+    ['BATCH', 'A pile or bale of one material at one grade, built from many accepted shipments.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['warehouse_id', 'int', 'FK', 'Where it is stored'],
+      ['material_type_id', 'int', 'FK', 'Which material'],
+      ['weight_kg', 'float', '', 'Current weight in stock'],
+      ['grade', 'string', '', 'Quality grade'],
+      ['status', 'string', '', 'in stock, reserved or sold'],
+      ['created_at', 'datetime', '', 'When it was started']
+    ], 'Stock for a material is the sum of weight_kg of its batches.'],
+    ['FACTORY', 'A recycling factory that buys material.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['name', 'string', '', 'Factory name'],
+      ['contact', 'string', '', 'Contact person or phone'],
+      ['address', 'string', '', 'Address']
+    ], 'A factory has many users and many orders.'],
+    ['FACTORY_ORDER', 'One order placed by a factory.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['factory_id', 'int', 'FK', 'Who ordered'],
+      ['status', 'string', '', 'placed, confirmed, dispatched or delivered'],
+      ['ordered_at', 'datetime', '', 'When it was placed'],
+      ['delivered_at', 'datetime', '', 'When it arrived. Empty until then']
+    ], 'An order has one or more items and at most one invoice.'],
+    ['ORDER_ITEM', 'One line of an order: a material, a quantity and the batch it is taken from.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['order_id', 'int', 'FK', 'The order it belongs to'],
+      ['material_type_id', 'int', 'FK', 'Which material was requested'],
+      ['batch_id', 'int', 'FK', 'Which batch supplies it'],
+      ['quantity_kg', 'float', '', 'How much was ordered'],
+      ['unit_price', 'float', '', 'Price per kg at the time of the order']
+    ], 'unit_price is copied here so old orders keep their price when material prices change.'],
+    ['INVOICE', 'The bill for an order.', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['order_id', 'int', 'FK', 'The order being billed'],
+      ['total', 'float', '', 'Amount to pay'],
+      ['status', 'string', '', 'issued, paid or overdue'],
+      ['issued_at', 'datetime', '', 'Date of the invoice']
+    ], 'One invoice per order.'],
+    ['NOTIFICATION', 'Messages sent to users, such as "pickup tomorrow" or "42 points earned".', [
+      ['id', 'int', 'PK', 'Unique number'],
+      ['user_id', 'int', 'FK', 'Who receives it'],
+      ['title', 'string', '', 'Short title'],
+      ['body', 'string', '', 'Message text'],
+      ['is_read', 'boolean', '', 'Whether the user opened it'],
+      ['sent_at', 'datetime', '', 'When it was sent']
+    ], 'Sent through FCM push and also saved here so the user can see the history.']
+  ];
+  var list = document.getElementById('dict-list');
+  T.forEach(function (t) {
+    var d = document.createElement('div'); d.className = 'box';
+    d.innerHTML = '<h3 style="color:var(--accent)">' + t[0] + '</h3><p style="margin-bottom:10px;color:var(--fg)">' + t[1] + '</p>' +
+      '<table><tr><th>Column</th><th>Type</th><th>Key</th><th>Meaning</th></tr>' +
+      t[2].map(function (c) { return '<tr><td><code>' + c[0] + '</code></td><td>' + c[1] + '</td><td>' + c[2] + '</td><td>' + c[3] + '</td></tr>'; }).join('') +
+      '</table><p style="margin-top:10px"><strong>Relations:</strong> ' + t[3] + '</p>';
+    list.appendChild(d);
+  });
+
+  var L = [
+    ['1', 'Sara photographs a bag', 'BAG_SCAN', 'id 101, user_id 7, fill_level 0.8, content_type plastic, contamination 0.1, confidence 0.92'],
+    ['2', 'The app decides it is ready', 'PICKUP_REQUEST', 'id 55, scan_id 101, decision ready, status open'],
+    ['3', 'A shipment with a QR code is created', 'SHIPMENT', 'id 70, request_id 55, qr_code ECO-000070, source_type household, status created'],
+    ['4', 'It is placed on a driver route', 'ROUTE, ROUTE_STOP', 'route 12 (driver 3, vehicle 2); stop id 301: route_id 12, shipment_id 70, stop_order 4'],
+    ['5', 'The driver marks it collected', 'ROUTE_STOP, SHIPMENT', 'collected_at filled; shipment status collected'],
+    ['6', 'The employee scans the QR and weighs it', 'WEIGHING_RECORD', 'id 30, shipment_id 70, material PET, actual_weight_kg 4.2, grade A, accepted true'],
+    ['7', 'Points are written', 'POINTS_LEDGER', 'user_id 7, points 42 (4.2 kg × factor 10 × multiplier 1.0), reason earned'],
+    ['8', 'The weight joins a batch in the warehouse', 'BATCH', 'batch 9 (PET, grade A) weight_kg increases by 4.2; weighing record batch_id set to 9'],
+    ['9', 'A factory orders PET', 'FACTORY_ORDER, ORDER_ITEM, INVOICE', 'order 5; item takes quantity_kg from batch 9 at the current unit_price; invoice created']
+  ];
+  document.getElementById('life').innerHTML =
+    '<tr><th>Step</th><th>What happens</th><th>Table written</th><th>Example row (made up)</th></tr>' +
+    L.map(function (r) { return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td><td><code>' + r[2] + '</code></td><td>' + r[3] + '</td></tr>'; }).join('');
+})();
+</script>

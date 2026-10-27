@@ -1,10 +1,12 @@
-name: CI
+name: Backend CI
 
 on:
   pull_request:
     branches: [main, dev]
+    paths: ['apps/backend/**', '.github/workflows/ci.yml']
   push:
     branches: [main, dev]
+    paths: ['apps/backend/**', '.github/workflows/ci.yml']
 
 jobs:
   test:
@@ -22,12 +24,16 @@ jobs:
           --health-interval 5s --health-timeout 3s --health-retries 10
     env:
       DATABASE_URL: postgresql://ecoplus:ecoplus@localhost:5432/ecoplus_test
+    defaults:
+      run:
+        working-directory: apps/backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: apps/backend/.nvmrc
           cache: npm
+          cache-dependency-path: apps/backend/package-lock.json
       - run: npm ci
       - run: npx prisma generate
       - run: npm run typecheck
