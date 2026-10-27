@@ -5,3 +5,4 @@ One short report per finished piece of work. Copy [TEMPLATE.md](TEMPLATE.md) to 
 | Date | Report |
 | --- | --- |
 | 2026-10-27 | [Backend Phases 0 to 2](2026-10-27-backend-phases-0-2.md) |
+| 2026-10-28 | [Factory orders and invoices](2026-10-28-factory-orders-invoices.md) |
