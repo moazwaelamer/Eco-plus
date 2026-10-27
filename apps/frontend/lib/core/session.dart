@@ -43,6 +43,14 @@ class SessionNotifier extends AsyncNotifier<User?> {
     state = AsyncData(User.fromJson(data['user'] as Map<String, dynamic>));
   }
 
+  /// Creates the account and logs in with the tokens the API returns.
+  Future<void> register(Map<String, dynamic> body) async {
+    final res = await ref.read(dioProvider).post('/auth/register', data: body);
+    final data = res.data as Map<String, dynamic>;
+    await ref.read(tokenStoreProvider).save(data['accessToken'] as String, data['refreshToken'] as String);
+    state = AsyncData(User.fromJson(data['user'] as Map<String, dynamic>));
+  }
+
   Future<void> logout() async {
     final tokens = ref.read(tokenStoreProvider);
     final refresh = await tokens.refresh;
