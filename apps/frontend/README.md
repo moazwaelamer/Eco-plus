@@ -1,5 +1,35 @@
 # Frontend (Flutter mobile app)
 
-Not started. Planned roles in one app: citizen / business (scan bag, request pickup, QR, points), driver (today's stops,
-handover code), employee (scan QR, weigh, warehouse). API contract: `apps/backend` Swagger at `/docs`.
-Linear: Phase 0 to 2 frontend tasks (MOA-208, 209, 222 to 226, 235, 236).
+One app for customers (citizen, business) and drivers. Admin, employee and factory will use the web dashboard (`apps/dashboard`).
+Arabic first (RTL) with English, light and dark themes.
+
+## Built
+
+- Login with saved session and automatic token refresh; demo-account chips on the login screen (need the development seed).
+- Citizen / business: home with points card and level progress, shipments with QR and the handover code, points history and leaderboard.
+- Driver: today's route, start route, collect a stop by typing the customer's 6 digit code.
+- Admin / employee / factory: a screen saying their tools live on the web dashboard.
+
+## Not built yet
+
+Register screen, scan a bag and request a pickup (camera, location), notifications list, employee weighing, push notifications,
+offline queue, real app icon and store assets, iOS and Android builds were not run (only the web build was checked).
+
+## Run
+
+Start the API first (`apps/backend`, `npm run start:dev`), then:
+
+```bash
+cd apps/frontend
+flutter pub get
+flutter run -d chrome --web-port 8080     # web; the API allows http://localhost:8080 by default
+flutter run                               # a connected phone or simulator
+flutter run --dart-define=API_URL=http://192.168.1.10:3000   # API on another machine
+```
+
+The Android emulator reaches the API at `10.0.2.2:3000` automatically. Checks: `flutter analyze` and `flutter test`.
+
+## Layout
+
+`lib/app` theme, router, strings. `lib/core` API client and session. `lib/features/<role>` screens. `lib/widgets` shared pieces.
+Design tokens are in `lib/app/theme.dart` (forest green, warm paper, lime accent, Cairo font).
