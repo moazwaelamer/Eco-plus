@@ -6,7 +6,7 @@ Backend details and rules are in `apps/backend/README.md` and `apps/backend/AGEN
 ## Working style
 - One module at a time: build, test, stop. Do not scaffold things that are not asked for.
 - Match surrounding code. No comments that restate the code.
-- Commit or push only when the user asks. Never commit to `main` once the GitHub repo exists: branch, then pull request.
+- Never commit to `main`. Every task, fix or doc change gets its own branch (`feat/moa-xxx-name`, `fix/...`, `docs/...`, `chore/...`), then a pull request into `main`. Commit or push only when the user asks.
 
 ## Non-negotiables (from the product design)
 - Points = weight x material factor x level multiplier, only after the employee weighs. The weighed value is the truth.
