@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcoPlus brand board</title>
+<style>
+@font-face{font-family:Plex;font-weight:400;src:url(../../../apps/frontend/assets/fonts/IBMPlexSansArabic-Regular.ttf)}
+@font-face{font-family:Plex;font-weight:600;src:url(../../../apps/frontend/assets/fonts/IBMPlexSansArabic-SemiBold.ttf)}
+@font-face{font-family:Plex;font-weight:700;src:url(../../../apps/frontend/assets/fonts/IBMPlexSansArabic-Bold.ttf)}
+:root{--bg:#F5F2EA;--surface:#fff;--ink:#0D1B14;--soft:#566660;--line:#DFD9C9;--canopy:#0B3D2E;--bloom:#C8F560}
+@media (prefers-color-scheme:dark){:root{--bg:#07110C;--surface:#0F1D16;--ink:#EAF3EC;--soft:#8FA598;--line:#223529;--canopy:#6FE0A6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Plex,system-ui,sans-serif;padding:32px max(16px,env(safe-area-inset-left))}
+main{max-width:980px;margin:auto;display:grid;gap:28px}h1,h2{margin:0;letter-spacing:-.02em}h1{font-size:40px}h2{font-size:20px;color:var(--soft);font-weight:600}
+.hero{background:linear-gradient(135deg,#0E4A37,#06261C);border-radius:32px;padding:36px;color:#EAF6EE;display:flex;gap:24px;align-items:center;flex-wrap:wrap;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;width:380px;height:380px;left:-60px;top:-80px;background:radial-gradient(#1E8A62aa,transparent 65%);animation:float 12s ease-in-out infinite alternate}
+@keyframes float{to{transform:translate(160px,80px)}}@media (prefers-reduced-motion:reduce){.hero::before{animation:none}}
+.hero>*{position:relative}.word{font-size:56px;font-weight:700;letter-spacing:-.04em;line-height:1;direction:ltr}.word b{color:var(--bloom)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw{border-radius:18px;padding:14px;min-height:110px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid var(--line);font-size:13px}.sw b{font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px}
+.type div{margin:6px 0}.mono{font-feature-settings:"tnum"}
+</style></head><body><main>
+<section class="hero"><img src="logo.svg" width="96" height="96" alt="EcoPlus mark"><div><div class="word">Eco<b>Plus</b></div><p style="margin:.4em 0 0;opacity:.85">اجمع، وزّن، واكسب نقاط · Collect, weigh, earn points</p></div></section>
+<section><h2>Colour</h2><div class="grid" style="margin-top:12px">
+<div class="sw" style="background:#F5F2EA;color:#0D1B14"><b>Paper</b>#F5F2EA</div>
+<div class="sw" style="background:#fff;color:#0D1B14"><b>Surface</b>#FFFFFF</div>
+<div class="sw" style="background:#0B3D2E;color:#fff"><b>Canopy</b>#0B3D2E</div>
+<div class="sw" style="background:#C8F560;color:#0D1B14"><b>Bloom</b>#C8F560</div>
+<div class="sw" style="background:#0D1B14;color:#EAF3EC"><b>Ink</b>#0D1B14</div>
+<div class="sw" style="background:#A35A0C;color:#fff"><b>Copper</b>#A35A0C</div>
+<div class="sw" style="background:#C23B33;color:#fff"><b>Danger</b>#C23B33</div>
+<div class="sw" style="background:#07110C;color:#EAF3EC"><b>Dark bg</b>#07110C</div>
+<div class="sw" style="background:#6FE0A6;color:#05150D"><b>Mint</b>#6FE0A6</div>
+<div class="sw" style="background:linear-gradient(135deg,#0E4A37,#06261C);color:#EAF6EE"><b>Canopy gradient</b>#0E4A37 → #06261C</div>
+</div></section>
+<section class="card type"><h2>Typography · IBM Plex Sans Arabic</h2>
+<div style="font-size:48px;font-weight:700;letter-spacing:-.03em" class="mono">1,280 نقطة</div>
+<div style="font-size:28px;font-weight:700">أهلاً بعودتك — Welcome back</div>
+<div style="font-size:16px;color:var(--soft)">سجّل دخولك لمتابعة شحناتك ونقاطك. Log in to follow your shipments and points.</div>
+<div style="font-size:14px;font-weight:600">Aa أبجد 0123456789</div></section>
+</main></body></html>

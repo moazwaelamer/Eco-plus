@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import '../../app/strings.dart';
 import '../../app/theme.dart';
 import '../../core/api.dart';
 import '../../widgets/common.dart';
+import '../../widgets/motion.dart';
 import 'citizen_data.dart';
 
 const _materials = ['plastic', 'paper', 'cardboard', 'glass', 'aluminium', 'metal', 'mixed'];
@@ -255,23 +257,34 @@ class _ResultView extends ConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.all(28),
               child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Container(
-                  width: 88,
-                  height: 88,
-                  decoration: BoxDecoration(color: waiting ? c.amber.withValues(alpha: 0.18) : c.accent, shape: BoxShape.circle),
-                  child: Icon(waiting ? Icons.hourglass_bottom_rounded : Icons.check_rounded, size: 44, color: waiting ? c.amber : c.onAccent),
+                SizedBox(
+                  width: 132,
+                  height: 132,
+                  child: Stack(alignment: Alignment.center, children: [
+                    if (!waiting)
+                      Container(width: 88, height: 88, decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: EcoColors.bloom, width: 3)))
+                          .animate()
+                          .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.5, 1.5), duration: 900.ms, curve: Curves.easeOut)
+                          .fadeOut(duration: 900.ms),
+                    Container(
+                      width: 88,
+                      height: 88,
+                      decoration: BoxDecoration(color: waiting ? c.amber.withValues(alpha: 0.18) : EcoColors.bloom, shape: BoxShape.circle),
+                      child: Icon(waiting ? Icons.hourglass_bottom_rounded : Icons.check_rounded, size: 44, color: waiting ? c.amber : const Color(0xFF0D1B14)),
+                    ).animate().scale(begin: const Offset(0.3, 0.3), duration: 650.ms, curve: Curves.elasticOut).fadeIn(duration: 200.ms),
+                  ]),
                 ),
                 const SizedBox(height: 20),
                 Text(title, style: t.headlineSmall?.copyWith(fontWeight: FontWeight.w800), textAlign: TextAlign.center),
                 const SizedBox(height: 8),
-                Text(body, style: t.bodyLarge?.copyWith(color: c.inkSoft), textAlign: TextAlign.center),
+                Text(body, style: t.bodyLarge?.copyWith(color: c.inkSoft), textAlign: TextAlign.center).fadeUp(index: 4),
                 if (!waiting) ...[
                   const SizedBox(height: 24),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
                     child: QrImageView(data: shipment['qrCode'] as String, size: 170, backgroundColor: Colors.white),
-                  ),
+                  ).fadeUp(index: 5),
                   const SizedBox(height: 10),
                   Text(s.shipmentCode, style: t.labelMedium?.copyWith(color: c.inkSoft)),
                   Text('${shipment['qrCode']}', style: t.titleLarge?.copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.5)),

@@ -9,6 +9,7 @@
 | [product/VISION.md](product/VISION.md), [FEATURES.md](product/FEATURES.md), [COMPETITORS.md](product/COMPETITORS.md) | Product |
 | [architecture/ARCHITECTURE.md](architecture/ARCHITECTURE.md), [CODE_STRUCTURE.md](architecture/CODE_STRUCTURE.md) | System design and code layout |
 | [architecture/ERD.md](architecture/ERD.md), [SCHEMA.md](architecture/SCHEMA.md), [API.md](architecture/API.md) | Generated from the real schema and controllers |
+| [design/BRAND.md](design/BRAND.md), [brand board](design/brand/brand-board.html) | Name, logo, colours, fonts, motion, voice |
 | [design/DESIGN_BRIEF.md](design/DESIGN_BRIEF.md), [SCREENS.md](design/SCREENS.md) | Design brief and screens per role |
 | [deployment/HOSTING.md](deployment/HOSTING.md) | Hosting plan |
 | [reports/README.md](reports/README.md) | One report per finished piece of work |

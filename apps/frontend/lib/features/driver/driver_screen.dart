@@ -5,6 +5,7 @@ import '../../app/strings.dart';
 import '../../app/theme.dart';
 import '../../core/api.dart';
 import '../../core/session.dart';
+import '../../widgets/brand.dart';
 import '../../widgets/common.dart';
 
 typedef Json = Map<String, dynamic>;

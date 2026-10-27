@@ -17,13 +17,13 @@ void main() {
         );
       }),
     ));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 5)); // let the entrance animations finish
 
     expect(find.text('تسجيل الدخول'), findsOneWidget);
     expect(find.text('عميل'), findsOneWidget);
 
     await tester.tap(find.text('English'));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 5));
     expect(find.text('Log in'), findsOneWidget);
     expect(find.text('Citizen'), findsOneWidget);
   });

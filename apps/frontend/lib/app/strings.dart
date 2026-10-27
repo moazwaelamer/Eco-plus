@@ -16,6 +16,7 @@ class S {
   String get login => _('تسجيل الدخول', 'Log in');
   String get tryDemo => _('جرّب بحساب تجريبي', 'Try a demo account');
   String get logout => _('تسجيل الخروج', 'Log out');
+  String get theme => _('تبديل المظهر', 'Switch theme');
   String get language => _('English', 'العربية');
   String get wrongCredentials => _('الهاتف أو كلمة السر غير صحيحة', 'Wrong phone, email or password');
   String get noConnection => _('تعذّر الاتصال بالخادم. تأكد أنه شغّال.', 'Cannot reach the server. Is it running?');
