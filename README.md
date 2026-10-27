@@ -13,7 +13,7 @@ apps/
   backend/     NestJS + Prisma + PostgreSQL REST API (Phases 0 to 2 built)
   frontend/    Flutter mobile app: citizen / business, driver, employee (not started)
   dashboard/   Flutter Web: admin and factory portal (not started)
-docs/          Product study, decisions, workflow
+docs/          Status, roadmap, product, architecture, design, reports
 infra/         Docker, Coolify and hosting configs (empty for now)
 packages/      Shared contracts, for example the OpenAPI client (empty for now)
 .github/       CI workflows
