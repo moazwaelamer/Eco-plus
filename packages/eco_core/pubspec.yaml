@@ -1,0 +1,15 @@
+name: eco_core
+description: EcoPlus API client, token storage and session, shared by the mobile app and the dashboard.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=3.35.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.4.3
+  dio: ^5.11.1
+  flutter_secure_storage: ^11.2.0

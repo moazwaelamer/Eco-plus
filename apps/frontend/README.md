@@ -33,5 +33,5 @@ The Android emulator reaches the API at `10.0.2.2:3000` automatically. Checks: `
 
 ## Layout
 
-`lib/app` theme, router, strings. `lib/core` API client and session. `lib/features/<role>` screens. `lib/widgets` shared pieces.
+`lib/app` router, strings (theme is re-exported from `packages/eco_ui`). `lib/core` re-exports `packages/eco_core` (API client, session). `lib/features/<role>` screens. `lib/widgets` app widgets.
 Brand: [docs/design/BRAND.md](../../docs/design/BRAND.md). Tokens in `lib/app/theme.dart` and `packages/brand/tokens.json`; motion and brand widgets in `lib/widgets/brand.dart` and `lib/widgets/motion.dart`. Font: IBM Plex Sans Arabic, bundled.
