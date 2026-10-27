@@ -57,6 +57,7 @@ enum ShipmentStatus {
   collected
   weighed
   rejected
+  cancelled
 }
 
 enum DriverStatus {

@@ -10,6 +10,11 @@ const envSchema = z.object({
   CORS_ORIGINS: z.string().default(''),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(120),
   AUTH_THROTTLE_LIMIT: z.coerce.number().int().positive().default(10),
+  // Decision rule v1: a bag is worth a trip when its fill level reaches the threshold.
+  READY_FILL_THRESHOLD: z.coerce.number().min(0).max(1).default(0.6),
+  BUSINESS_READY_FILL_THRESHOLD: z.coerce.number().min(0).max(1).default(0.4),
+  UPLOAD_DIR: z.string().default('./uploads'),
+  MAX_UPLOAD_MB: z.coerce.number().positive().default(5),
   SWAGGER_ENABLED: z
     .enum(['true', 'false'])
     .default('false')

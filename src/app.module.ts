@@ -2,13 +2,22 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AdminModule } from './admin/admin.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
 import { RolesGuard } from './auth/roles.guard.js';
 import { requestId } from './common/request-id.middleware.js';
 import { type Env, validateEnv } from './config/env.js';
 import { HealthController } from './health/health.controller.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
+import { PointsModule } from './points/points.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { RequestsModule } from './requests/requests.module.js';
+import { ScansModule } from './scans/scans.module.js';
+import { ShipmentsModule } from './shipments/shipments.module.js';
+import { UploadsModule } from './uploads/uploads.module.js';
+import { WarehouseModule } from './warehouse/warehouse.module.js';
+import { WeighingModule } from './weighing/weighing.module.js';
 
 @Module({
   imports: [
@@ -33,6 +42,15 @@ import { PrismaModule } from './prisma/prisma.module.js';
     }),
     PrismaModule,
     AuthModule,
+    NotificationsModule,
+    UploadsModule,
+    ScansModule,
+    RequestsModule,
+    ShipmentsModule,
+    PointsModule,
+    WeighingModule,
+    WarehouseModule,
+    AdminModule,
   ],
   controllers: [HealthController],
   providers: [

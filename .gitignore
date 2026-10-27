@@ -9,3 +9,4 @@ src/generated
 .DS_Store
 !.env.test
 *.tsbuildinfo
+uploads
