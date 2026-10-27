@@ -9,6 +9,7 @@ describe('shipment status machine', () => {
     ['created', 'assigned'],
     ['created', 'collected'],
     ['created', 'cancelled'],
+    ['assigned', 'created'],
     ['assigned', 'collected'],
     ['assigned', 'cancelled'],
     ['collected', 'weighed'],

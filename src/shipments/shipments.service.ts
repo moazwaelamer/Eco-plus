@@ -54,11 +54,17 @@ export class ShipmentsService {
     return shipment;
   }
 
-  /** Staff mark a shipment as collected. The driver app (Phase 2) will do this with a handover code. */
+  /** Staff mark a shipment as collected when no driver is involved. Shipments on a route are collected by the driver. */
   async markCollected(id: number) {
     return this.prisma.$transaction(async (tx) => {
       const shipment = await tx.shipment.findUnique({ where: { id }, include: { request: { include: { scan: { select: { userId: true } } } } } });
       if (!shipment) throw new NotFoundException('Shipment not found.');
+      if (shipment.status === 'assigned') {
+        throw new ConflictException({
+          code: 'on_driver_route',
+          message: 'This shipment is on a driver route. The driver collects it with the handover code.',
+        });
+      }
       if (!canTransition(shipment.status, 'collected')) {
         throw new ConflictException(`A shipment that is ${shipment.status} cannot be marked as collected.`);
       }

@@ -58,6 +58,29 @@ Rules worth knowing:
 - A new batch is only started when no open batch exists for the same warehouse, material and grade.
 - Photos are stored on local disk (`UPLOAD_DIR`) under random names and served only to logged-in users.
 
+## What Phase 2 does (logistics)
+
+Admin plans the day, the driver follows the stops, the customer proves the handover with a code.
+
+1. **Fleet** (admin): `POST/GET/PATCH /vehicles`, `POST/GET/PATCH /drivers`. A driver is a normal login with role `driver`.
+2. **Plan a route** (admin): `POST /routes` with driver, vehicle, date and shipment ids (up to 25). In one transaction every
+   shipment becomes `assigned` with a fresh 6 digit **handover code**, its request becomes `scheduled`, and the customer is
+   notified with the code. If any shipment is not waiting for a driver, nothing changes (two admins cannot take the same one).
+3. **Stop order**: nearest-neighbour from the optional `start` point. With `GOOGLE_ROUTES_API_KEY` and a `start`, Google Routes API
+   is asked first (max 25 stops) and any failure falls back to nearest-neighbour. The Google call is covered by tests with a fake
+   response only; it has not been tried against the real service.
+4. **Change a planned route**: `PUT /routes/:id/stop-order` (manual order), `DELETE /routes/:id/stops/:shipmentId`,
+   `DELETE /routes/:id`. Removed shipments go back to `created` and the old code stops working. A started route is locked.
+5. **Driver app API**: `GET /driver/routes` (today, Cairo time, or `?date=`), `POST /driver/routes/:id/start` (own day only, one at
+   a time), `POST /driver/stops/:shipmentId/collect {handoverCode}`. The driver never sees the code; a wrong code is refused, the
+   route must be started, and only the route's own driver can collect. The last collected stop finishes the route.
+6. **Decision rule v2 (merge)**: a bag below the normal threshold but at least `MERGE_MIN_FILL` full is collected anyway when another
+   shipment that is `created` or `assigned` is within `MERGE_RADIUS_M` metres. Its request has decision `merge`.
+7. **Devices**: `POST /me/device-tokens`, `DELETE /me/device-tokens/:token`. `PUSH_PROVIDER=log` only logs how many phones would be
+   notified; **sending real FCM messages is not built** (needs Firebase credentials). The in-app notification is always stored.
+
+Staff can no longer mark a shipment that is on a route as collected (`409 on_driver_route`).
+
 ## Tests
 
 ```bash
@@ -115,9 +138,11 @@ The Prisma schema follows the dictionary (section 6b) with a few additions found
 | `invoices.number`, `dueAt` | Invoice numbering and overdue calculation |
 | `weighing_records.materialTypeId` optional | A rejected weighing may not have a known material |
 | `shipments.status` has `cancelled` | A user can withdraw a request before collection |
+| New table `device_tokens` | Phone push tokens for notifications |
+| `shipments.status` can go `assigned` -> `created` | A planned route can be changed, the shipment returns to waiting |
 | `points_ledger` trigger | Blocks UPDATE and DELETE, so history cannot be rewritten |
 
-That makes 23 tables, not 22 as written in the document. Each change above also needs to be copied into the
+That makes 24 tables, not 22 as written in the document. Each change above also needs to be copied into the
 project document (ERD and dictionary).
 
 ## Known limits
@@ -126,7 +151,9 @@ project document (ERD and dictionary).
   object storage, so a second server would not see them. Move to S3-compatible storage before production.
 - Warehouse changes are written to the application log; the proper audit table is a Phase 3 task.
 - A customer created by staff has no usable password until password reset exists.
-- Nothing yet moves a shipment to `assigned`: routes and the driver app are Phase 2.
+- A driver cannot report "customer not home"; a stop that cannot be collected has to be removed by an admin before the route starts, and after that it stays open.
+- The 6 digit handover code is protected by a rate limit (10 tries a minute per IP) and the route checks, not by a per-code attempt counter.
+- Stop order ignores traffic and vehicle capacity (no weight is known before weighing).
 - Rate limiting is per IP (stricter on `/auth`). There is no per-account lockout yet.
 - Password reset, email and phone verification are not built.
 - The Dockerfile and `docker-compose.yml` were written but not run (Docker is not installed on the

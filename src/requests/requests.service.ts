@@ -2,6 +2,7 @@ import { ConflictException, ForbiddenException, Injectable, NotFoundException, U
 import { ConfigService } from '@nestjs/config';
 import type { AuthUser } from '../auth/auth-user.js';
 import type { Env } from '../config/env.js';
+import { boundingBox, distanceMeters } from '../common/geo.js';
 import { type Pagination, toPage } from '../common/pagination.js';
 import type { RequestChannel, SourceType } from '../generated/prisma/enums.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
@@ -46,17 +47,25 @@ export class RequestsService {
     }
 
     const sourceType: SourceType = scan.user.role === 'business' ? 'business' : 'household';
-    const decision: Decision = decidePickup(scan.fillLevel, sourceType, {
+    const profile = scan.user.citizenProfile ?? scan.user.businessProfile;
+    const gpsLat = scan.lat ?? profile?.lat ?? null;
+    const gpsLng = scan.lng ?? profile?.lng ?? null;
+
+    const rules = {
       readyFillThreshold: this.config.get('READY_FILL_THRESHOLD', { infer: true }),
       businessReadyFillThreshold: this.config.get('BUSINESS_READY_FILL_THRESHOLD', { infer: true }),
-    });
+      mergeMinFill: this.config.get('MERGE_MIN_FILL', { infer: true }),
+    };
+    // Only look for neighbours when the bag is below the normal threshold; a full bag is "ready" anyway.
+    let nearby = false;
+    if (gpsLat !== null && gpsLng !== null && decidePickup(scan.fillLevel, sourceType, rules) === 'wait') {
+      nearby = await this.hasOpenShipmentNearby({ lat: gpsLat, lng: gpsLng });
+    }
+    const decision: Decision = decidePickup(scan.fillLevel, sourceType, rules, nearby);
     if (decision === 'wait') {
       return { decision, request: null, shipment: null, message: 'The bag is not full enough yet. Scan again when it is fuller.' };
     }
 
-    const profile = scan.user.citizenProfile ?? scan.user.businessProfile;
-    const gpsLat = scan.lat ?? profile?.lat ?? null;
-    const gpsLng = scan.lng ?? profile?.lng ?? null;
     if (gpsLat === null || gpsLng === null) {
       throw new UnprocessableEntityException({ code: 'location_required', message: 'Add the pickup location to the scan or to your profile.' });
     }
@@ -66,7 +75,7 @@ export class RequestsService {
       while (await tx.shipment.findUnique({ where: { qrCode }, select: { id: true } })) qrCode = generateQrCode();
 
       const request = await tx.pickupRequest.create({
-        data: { scanId: scan.id, decision: 'ready', channel: opts.channel, createdById: opts.createdById },
+        data: { scanId: scan.id, decision, channel: opts.channel, createdById: opts.createdById },
       });
       const shipment = await tx.shipment.create({
         data: { requestId: request.id, qrCode, gpsLat, gpsLng, sourceType },
@@ -80,7 +89,27 @@ export class RequestsService {
       return { request, shipment };
     });
 
-    return { decision, ...result, message: 'Pickup requested.' };
+    return {
+      decision,
+      ...result,
+      message: decision === 'merge' ? 'Pickup requested. A driver is already collecting nearby, so your bag rides along.' : 'Pickup requested.',
+    };
+  }
+
+  /** True when another shipment that has not been collected yet is within MERGE_RADIUS_M metres. */
+  private async hasOpenShipmentNearby(point: { lat: number; lng: number }): Promise<boolean> {
+    const radius = this.config.get('MERGE_RADIUS_M', { infer: true });
+    const box = boundingBox(point, radius);
+    const candidates = await this.prisma.shipment.findMany({
+      where: {
+        status: { in: ['created', 'assigned'] },
+        gpsLat: { gte: box.minLat, lte: box.maxLat },
+        gpsLng: { gte: box.minLng, lte: box.maxLng },
+      },
+      select: { gpsLat: true, gpsLng: true },
+      take: 50,
+    });
+    return candidates.some((c) => distanceMeters(point, { lat: c.gpsLat, lng: c.gpsLng }) <= radius);
   }
 
   async list(userId: number, { limit, cursor }: Pagination) {

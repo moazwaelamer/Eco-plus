@@ -20,7 +20,7 @@ export class RequestsController {
 
   @Roles('citizen', 'business')
   @Post()
-  @ApiOperation({ summary: 'Request a pickup for one of my scans. 201 with a shipment when ready, 200 with decision "wait" when not full enough.' })
+  @ApiOperation({ summary: 'Request a pickup for one of my scans. 201 with a shipment when ready or merged, 200 with decision "wait" when not full enough.' })
   async create(
     @CurrentUser() user: AuthUser,
     @Body(new ZodValidationPipe(createRequestSchema)) dto: CreateRequestDto,
@@ -28,7 +28,7 @@ export class RequestsController {
   ) {
     await this.scans.get(user, dto.scanId); // 404 or 403 unless the scan is mine
     const result = await this.requests.createFromScan({ scanId: dto.scanId, channel: 'app' });
-    res.status(result.decision === 'ready' ? 201 : 200);
+    res.status(result.decision === 'wait' ? 200 : 201);
     return result;
   }
 

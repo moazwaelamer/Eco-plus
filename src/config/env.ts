@@ -13,6 +13,19 @@ const envSchema = z.object({
   // Decision rule v1: a bag is worth a trip when its fill level reaches the threshold.
   READY_FILL_THRESHOLD: z.coerce.number().min(0).max(1).default(0.6),
   BUSINESS_READY_FILL_THRESHOLD: z.coerce.number().min(0).max(1).default(0.4),
+  // Decision rule v2: a bag below the threshold is still collected when another open shipment is
+  // within this many metres and the bag is at least MERGE_MIN_FILL full (the trip happens anyway).
+  MERGE_RADIUS_M: z.coerce.number().positive().default(150),
+  MERGE_MIN_FILL: z.coerce.number().min(0).max(1).default(0.3),
+  // Optional. When set, stop order comes from Google Routes API; otherwise (or on failure) nearest-neighbour.
+  GOOGLE_ROUTES_API_KEY: z
+    .string()
+    .optional()
+    .transform((v) => (v ? v : undefined)),
+  // Time zone that decides what "today" means for a driver.
+  APP_TIMEZONE: z.string().default('Africa/Cairo'),
+  // "none" sends nothing, "log" only logs how many phones would get the push. A real FCM sender is not built yet.
+  PUSH_PROVIDER: z.enum(['none', 'log']).default('none'),
   UPLOAD_DIR: z.string().default('./uploads'),
   MAX_UPLOAD_MB: z.coerce.number().positive().default(5),
   SWAGGER_ENABLED: z

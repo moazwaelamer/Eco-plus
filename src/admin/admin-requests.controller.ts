@@ -22,7 +22,7 @@ export class AdminRequestsController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.service.createForCustomer(staff, dto);
-    res.status(result.decision === 'ready' ? 201 : 200);
+    res.status(result.decision === 'wait' ? 200 : 201);
     return result;
   }
 }
