@@ -1,0 +1,460 @@
+// EcoPlus database schema. Source of truth: sections 6 and 6b of the project document.
+// Weights and money use Decimal to avoid rounding errors. lat/lng stay plain floats
+// (no PostGIS in the MVP).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  citizen
+  business
+  driver
+  employee
+  admin
+  factory
+}
+
+enum PickupDecision {
+  ready
+  wait
+  merge
+}
+
+enum RequestStatus {
+  open
+  scheduled
+  collected
+  cancelled
+}
+
+enum RequestChannel {
+  app
+  phone
+  whatsapp
+}
+
+enum SourceType {
+  household
+  business
+}
+
+enum ScanSource {
+  ai
+  manual
+}
+
+enum ShipmentStatus {
+  created
+  assigned
+  collected
+  weighed
+  rejected
+}
+
+enum DriverStatus {
+  available
+  on_route
+  off_duty
+}
+
+enum RouteStatus {
+  planned
+  in_progress
+  done
+}
+
+enum BatchStatus {
+  in_stock
+  reserved
+  sold
+}
+
+enum OrderStatus {
+  placed
+  confirmed
+  dispatched
+  delivered
+  cancelled
+}
+
+enum InvoiceStatus {
+  issued
+  paid
+  overdue
+}
+
+enum LedgerReason {
+  earned
+  correction
+}
+
+// ---------- Users and profiles ----------
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  phone        String?  @unique
+  email        String?  @unique
+  passwordHash String
+  role         Role
+  factoryId    Int?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  factory         Factory?         @relation(fields: [factoryId], references: [id])
+  citizenProfile  CitizenProfile?
+  businessProfile BusinessProfile?
+  driver          Driver?
+  employee        Employee?
+  scans           BagScan[]
+  ledger          PointsLedger[]
+  notifications   Notification[]
+  refreshTokens   RefreshToken[]
+
+  @@index([role])
+  @@map("users")
+}
+
+// Auth support table (not in the ERD): refresh tokens are stored hashed so they can be revoked.
+model RefreshToken {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model Level {
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  minPoints  Int
+  multiplier Decimal @db.Decimal(4, 2)
+
+  citizens CitizenProfile[]
+
+  @@map("levels")
+}
+
+model CitizenProfile {
+  userId      Int     @id
+  levelId     Int
+  totalPoints Int     @default(0)
+  address     String?
+  lat         Float?
+  lng         Float?
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  level Level @relation(fields: [levelId], references: [id])
+
+  @@map("citizen_profiles")
+}
+
+model BusinessProfile {
+  userId       Int     @id
+  businessName String
+  businessType String
+  agreementRef String?
+  lat          Float?
+  lng          Float?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("business_profiles")
+}
+
+// ---------- Scans, requests, shipments ----------
+
+model BagScan {
+  id            Int        @id @default(autoincrement())
+  userId        Int
+  imageUrl      String?
+  fillLevel     Float?
+  contentType   String
+  contamination Float?
+  confidence    Float?
+  source        ScanSource @default(manual)
+  lat           Float?
+  lng           Float?
+  scannedAt     DateTime   @default(now())
+
+  user    User           @relation(fields: [userId], references: [id])
+  request PickupRequest?
+
+  @@index([userId, scannedAt])
+  @@map("bag_scans")
+}
+
+model PickupRequest {
+  id          Int            @id @default(autoincrement())
+  scanId      Int            @unique
+  decision    PickupDecision
+  status      RequestStatus  @default(open)
+  channel     RequestChannel @default(app)
+  createdById Int?
+  requestedAt DateTime       @default(now())
+
+  scan     BagScan   @relation(fields: [scanId], references: [id])
+  shipment Shipment?
+
+  @@index([status, requestedAt])
+  @@map("pickup_requests")
+}
+
+model Shipment {
+  id           Int            @id @default(autoincrement())
+  requestId    Int            @unique
+  qrCode       String         @unique
+  gpsLat       Float
+  gpsLng       Float
+  sourceType   SourceType
+  handoverCode String?
+  status       ShipmentStatus @default(created)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  request  PickupRequest   @relation(fields: [requestId], references: [id])
+  stop     RouteStop?
+  weighing WeighingRecord?
+
+  @@index([status])
+  @@map("shipments")
+}
+
+// ---------- Logistics ----------
+
+model Vehicle {
+  id         Int     @id @default(autoincrement())
+  plate      String  @unique
+  type       String
+  capacityKg Decimal @db.Decimal(10, 2)
+  isActive   Boolean @default(true)
+
+  routes Route[]
+
+  @@map("vehicles")
+}
+
+model Driver {
+  userId    Int          @id
+  licenseNo String
+  status    DriverStatus @default(available)
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  routes Route[]
+
+  @@map("drivers")
+}
+
+model Route {
+  id        Int         @id @default(autoincrement())
+  driverId  Int
+  vehicleId Int
+  routeDate DateTime    @db.Date
+  status    RouteStatus @default(planned)
+
+  driver  Driver      @relation(fields: [driverId], references: [userId])
+  vehicle Vehicle     @relation(fields: [vehicleId], references: [id])
+  stops   RouteStop[]
+
+  @@index([routeDate, driverId])
+  @@map("routes")
+}
+
+model RouteStop {
+  id          Int       @id @default(autoincrement())
+  routeId     Int
+  shipmentId  Int       @unique
+  stopOrder   Int
+  collectedAt DateTime?
+
+  route    Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  shipment Shipment @relation(fields: [shipmentId], references: [id])
+
+  @@unique([routeId, stopOrder])
+  @@map("route_stops")
+}
+
+// ---------- Warehouse ----------
+
+model Warehouse {
+  id         Int     @id @default(autoincrement())
+  name       String
+  address    String?
+  capacityKg Decimal @db.Decimal(12, 2)
+
+  employees Employee[]
+  batches   Batch[]
+
+  @@map("warehouses")
+}
+
+model Employee {
+  userId      Int    @id
+  warehouseId Int
+  position    String
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  warehouse Warehouse         @relation(fields: [warehouseId], references: [id])
+  weighings WeighingRecord[]
+
+  @@map("employees")
+}
+
+model MaterialType {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  pointFactor Decimal  @db.Decimal(8, 3)
+  pricePerKg  Decimal  @db.Decimal(10, 2)
+  co2KgPerKg  Decimal? @db.Decimal(8, 3)
+  isActive    Boolean  @default(true)
+
+  weighings  WeighingRecord[]
+  batches    Batch[]
+  orderItems OrderItem[]
+
+  @@map("material_types")
+}
+
+model Batch {
+  id             Int         @id @default(autoincrement())
+  warehouseId    Int
+  materialTypeId Int
+  weightKg       Decimal     @db.Decimal(12, 3)
+  grade          String
+  status         BatchStatus @default(in_stock)
+  createdAt      DateTime    @default(now())
+
+  warehouse    Warehouse        @relation(fields: [warehouseId], references: [id])
+  materialType MaterialType     @relation(fields: [materialTypeId], references: [id])
+  weighings    WeighingRecord[]
+  orderItems   OrderItem[]
+
+  @@index([warehouseId, materialTypeId, status])
+  @@map("batches")
+}
+
+model WeighingRecord {
+  id             Int      @id @default(autoincrement())
+  shipmentId     Int      @unique
+  employeeId     Int
+  materialTypeId Int?
+  batchId        Int?
+  actualWeightKg Decimal  @db.Decimal(10, 3)
+  grade          String?
+  accepted       Boolean
+  rejectReason   String?
+  weighedAt      DateTime @default(now())
+
+  shipment     Shipment       @relation(fields: [shipmentId], references: [id])
+  employee     Employee       @relation(fields: [employeeId], references: [userId])
+  materialType MaterialType?  @relation(fields: [materialTypeId], references: [id])
+  batch        Batch?         @relation(fields: [batchId], references: [id])
+  ledger       PointsLedger[]
+
+  @@index([employeeId, weighedAt])
+  @@map("weighing_records")
+}
+
+// Append-only. A database trigger blocks UPDATE and DELETE (see the constraints migration).
+model PointsLedger {
+  id         Int          @id @default(autoincrement())
+  userId     Int
+  weighingId Int?
+  points     Int
+  reason     LedgerReason
+  createdAt  DateTime     @default(now())
+
+  user     User            @relation(fields: [userId], references: [id])
+  weighing WeighingRecord? @relation(fields: [weighingId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("points_ledger")
+}
+
+// ---------- Factories and orders ----------
+
+model Factory {
+  id      Int     @id @default(autoincrement())
+  name    String
+  contact String?
+  address String?
+
+  users  User[]
+  orders FactoryOrder[]
+
+  @@map("factories")
+}
+
+model FactoryOrder {
+  id          Int         @id @default(autoincrement())
+  factoryId   Int
+  status      OrderStatus @default(placed)
+  orderedAt   DateTime    @default(now())
+  deliveredAt DateTime?
+
+  factory Factory     @relation(fields: [factoryId], references: [id])
+  items   OrderItem[]
+  invoice Invoice?
+
+  @@index([factoryId, status])
+  @@map("factory_orders")
+}
+
+model OrderItem {
+  id             Int     @id @default(autoincrement())
+  orderId        Int
+  materialTypeId Int
+  batchId        Int?
+  quantityKg     Decimal @db.Decimal(12, 3)
+  unitPrice      Decimal @db.Decimal(10, 2)
+
+  order        FactoryOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  materialType MaterialType @relation(fields: [materialTypeId], references: [id])
+  batch        Batch?       @relation(fields: [batchId], references: [id])
+
+  @@map("order_items")
+}
+
+model Invoice {
+  id       Int           @id @default(autoincrement())
+  orderId  Int           @unique
+  number   String        @unique
+  total    Decimal       @db.Decimal(12, 2)
+  status   InvoiceStatus @default(issued)
+  issuedAt DateTime      @default(now())
+  dueAt    DateTime
+
+  order FactoryOrder @relation(fields: [orderId], references: [id])
+
+  @@map("invoices")
+}
+
+// ---------- Notifications ----------
+
+model Notification {
+  id     Int      @id @default(autoincrement())
+  userId Int
+  title  String
+  body   String
+  isRead Boolean  @default(false)
+  sentAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}

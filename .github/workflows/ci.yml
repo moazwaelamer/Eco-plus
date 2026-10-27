@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, dev]
+  push:
+    branches: [main, dev]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ecoplus
+          POSTGRES_PASSWORD: ecoplus
+          POSTGRES_DB: ecoplus_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U ecoplus -d ecoplus_test"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://ecoplus:ecoplus@localhost:5432/ecoplus_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      # The e2e setup reads .env.test; CI points it at the service database above.
+      - run: |
+          sed -i "s#^DATABASE_URL=.*#DATABASE_URL=$DATABASE_URL#" .env.test
+          npm run test:e2e
+      - run: npm run build
