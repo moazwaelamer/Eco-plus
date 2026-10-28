@@ -47,6 +47,20 @@ class T {
   String get shipmentsOverTime => _('الشحنات الجديدة', 'New shipments');
   String get rejectionRate => _('نسبة الرفض', 'Rejection rate');
   String get totalKgPeriod => _('إجمالي الوزن', 'Total weight');
+  String get fleet => _('الأسطول', 'Fleet');
+  String get drivers => _('السائقون', 'Drivers');
+  String get vehicles => _('العربيات', 'Vehicles');
+  String get addDriver => _('إضافة سائق', 'Add driver');
+  String get addVehicle => _('إضافة عربية', 'Add vehicle');
+  String get fullName => _('الاسم', 'Name');
+  String get phone => _('الهاتف', 'Phone');
+  String get licenseNo => _('رقم الرخصة', 'License number');
+  String get plate => _('رقم اللوحة', 'Plate');
+  String get vehicleType => _('النوع', 'Type');
+  String get capacityKg => _('السعة (كجم)', 'Capacity (kg)');
+  String get save => _('حفظ', 'Save');
+  String get saved => _('تم الحفظ', 'Saved');
+  String get activeLabel => _('نشط', 'Active');
   String get recentOrders => _('آخر الطلبات', 'Recent orders');
   String get nothingYet => _('لا شيء هنا بعد', 'Nothing here yet');
 
