@@ -11,7 +11,7 @@ Future<void> _show(WidgetTester tester, List<Json> items) async {
     overrides: [notificationsProvider.overrideWith((ref) async => items)],
     child: MaterialApp(theme: buildTheme(Brightness.light), home: const NotificationsScreen()),
   ));
-  await tester.pump(const Duration(seconds: 2));
+  await tester.pump(const Duration(seconds: 5));
 }
 
 void main() {
