@@ -20,6 +20,8 @@ void main() {
       {'id': 1, 'title': 'Pickup scheduled', 'body': 'A driver will collect', 'isRead': false},
     ]);
     expect(find.text('Pickup scheduled'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(const Duration(seconds: 5));
   });
 
   testWidgets('notifications screen shows the empty state', (tester) async {
