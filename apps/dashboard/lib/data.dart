@@ -1,5 +1,6 @@
 import 'package:eco_core/eco_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 typedef Json = Map<String, dynamic>;
 
@@ -26,5 +27,10 @@ final routesProvider = listProvider('/routes');
 
 final stockProvider = FutureProvider.autoDispose<Json>((ref) async => (await ref.watch(dioProvider).get('/warehouse/stock')).data as Json);
 final catalogProvider = FutureProvider.autoDispose<List<Json>>((ref) async => _items((await ref.watch(dioProvider).get('/catalog')).data));
+
+final statsDays = StateProvider.autoDispose<int>((ref) => 30);
+final statsProvider = FutureProvider.autoDispose<Json>((ref) async =>
+    (await ref.watch(dioProvider).get('/admin/stats', queryParameters: {'days': ref.watch(statsDays)})).data as Json);
+final pointsProvider = listProvider('/admin/points');
 
 num n(Object? v) => v is num ? v : num.tryParse('$v') ?? 0;

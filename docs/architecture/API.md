@@ -5,6 +5,8 @@ Generated from the controllers by `scripts/gen-docs.py`. Full shapes: Swagger at
 | Method | Path | Who | What |
 | --- | --- | --- | --- |
 | POST | `/admin/pickup-requests` | admin, employee | Create a pickup request for a customer who called or wrote on WhatsApp |
+| GET | `/admin/points` | admin | Shipment locations and statuses for the map |
+| GET | `/admin/stats` | admin | Daily shipments, kilograms weighed and rejection rate over the last N days |
 | POST | `/auth/login` | public | Log in with phone or email and password |
 | POST | `/auth/logout` | public | Revoke a refresh token |
 | POST | `/auth/refresh` | public | Exchange a refresh token for a new token pair (the old refresh token stops working) |

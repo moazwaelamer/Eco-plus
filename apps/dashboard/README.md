@@ -15,8 +15,8 @@ Customers and drivers who log in here are told to use the mobile app.
 
 ## Not built yet
 
-Create drivers, vehicles, factories and materials from the UI (the API has them), users and levels, impact report, alerts, charts over time,
-map of collection points, employee weighing, invoice PDF, tables with sorting and search, tests against the API. Only the web build was run.
+Create drivers, vehicles, factories and materials from the UI (the API has them), users and levels, impact report, alerts, AI estimate chart,
+employee weighing, invoice PDF, tables with sorting and search, tests against the API. Only the web build was run.
 
 ## Run
 

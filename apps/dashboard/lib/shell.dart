@@ -20,6 +20,7 @@ final _all = <String, List<_Nav>>{
     _Nav('/routes', Icons.route_rounded, (t) => t.routes),
     _Nav('/orders', Icons.receipt_long_rounded, (t) => t.orders),
     _Nav('/invoices', Icons.request_quote_rounded, (t) => t.invoices),
+    _Nav('/map', Icons.map_rounded, (t) => t.map),
     _Nav('/stock', Icons.warehouse_rounded, (t) => t.stock),
   ],
   'factory': [

@@ -39,6 +39,14 @@ class T {
   String get capacityUse => _('استخدام المخزن', 'Warehouse use');
   String get stockByMaterial => _('المخزون حسب الخامة', 'Stock by material');
   String get ordersByStatus => _('الطلبات حسب الحالة', 'Orders by status');
+  String get map => _('الخريطة', 'Map');
+  String get days7 => _('٧ أيام', '7 days');
+  String get days30 => _('٣٠ يومًا', '30 days');
+  String get days90 => _('٩٠ يومًا', '90 days');
+  String get kgOverTime => _('الكيلوجرامات المستلمة', 'Kilograms weighed');
+  String get shipmentsOverTime => _('الشحنات الجديدة', 'New shipments');
+  String get rejectionRate => _('نسبة الرفض', 'Rejection rate');
+  String get totalKgPeriod => _('إجمالي الوزن', 'Total weight');
   String get recentOrders => _('آخر الطلبات', 'Recent orders');
   String get nothingYet => _('لا شيء هنا بعد', 'Nothing here yet');
 
