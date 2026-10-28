@@ -61,6 +61,15 @@ class T {
   String get save => _('حفظ', 'Save');
   String get saved => _('تم الحفظ', 'Saved');
   String get activeLabel => _('نشط', 'Active');
+  String get setup => _('الإعداد', 'Setup');
+  String get factories => _('المصانع', 'Factories');
+  String get materials => _('الخامات', 'Materials');
+  String get addFactory => _('إضافة مصنع', 'Add factory');
+  String get addMaterial => _('إضافة خامة', 'Add material');
+  String get contact => _('جهة الاتصال', 'Contact');
+  String get address => _('العنوان', 'Address');
+  String get pointFactor => _('معامل النقاط', 'Point factor');
+  String get pricePerKg => _('السعر لكل كجم', 'Price per kg');
   String get recentOrders => _('آخر الطلبات', 'Recent orders');
   String get nothingYet => _('لا شيء هنا بعد', 'Nothing here yet');
 
@@ -95,7 +104,6 @@ class T {
   String get placeOrder => _('اطلب الآن', 'Place order');
   String get orderPlaced => _('تم تسجيل الطلب وحجز المخزون', 'Order placed and stock reserved');
   String get availableKg => _('المتاح', 'Available');
-  String get pricePerKg => _('السعر لكل كجم', 'Price per kg');
   String get quantity => _('الكمية (كجم)', 'Quantity (kg)');
   String get cartEmpty => _('أدخل كمية لمادة واحدة على الأقل', 'Enter a quantity for at least one material');
   String get insufficient => _('المخزون لا يكفي لهذه الكمية', 'Not enough stock for that quantity');

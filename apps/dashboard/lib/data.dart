@@ -17,6 +17,8 @@ FutureProvider<List<Json>> listProvider(String path, {Map<String, dynamic>? quer
 final shipmentsByStatus = FutureProvider.autoDispose.family<List<Json>, String?>((ref, status) async =>
     _items((await ref.watch(dioProvider).get('/shipments', queryParameters: {'limit': 50, 'status': ?status})).data));
 
+final factoriesProvider = listProvider('/factories');
+final materialsProvider = FutureProvider.autoDispose<List<Json>>((ref) async => ((await ref.watch(dioProvider).get('/materials')).data as List).cast<Json>());
 final driversProvider = listProvider('/drivers');
 final vehiclesProvider = listProvider('/vehicles');
 final ordersProvider = listProvider('/orders');
