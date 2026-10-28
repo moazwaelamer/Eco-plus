@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data.dart';
 import '../strings.dart';
+import '../widgets/active_switch.dart';
 import '../widgets/form_dialog.dart';
 import '../widgets/ui.dart';
 
@@ -50,6 +51,7 @@ class FleetPage extends ConsumerWidget {
                           Text('${d['licenseNo']}', style: TextStyle(color: c.inkSoft)),
                           const SizedBox(width: 12),
                           StatusPill('${d['status']}'),
+                          ActiveSwitch(value: (d['user'] as Json?)?['isActive'] != false, path: '/drivers/${d['userId']}', refresh: driversProvider),
                         ]),
                       ).fadeUp(index: i < 8 ? i + 1 : 0),
                     ),
@@ -75,6 +77,7 @@ class FleetPage extends ConsumerWidget {
                         child: Row(children: [
                           Expanded(child: Text('${v['plate']}', style: tt.titleMedium)),
                           Text('${v['type']} · ${n(v['capacityKg'])} ${t.kg}', style: TextStyle(color: c.inkSoft)),
+                          ActiveSwitch(value: v['isActive'] != false, path: '/vehicles/${v['id']}', refresh: vehiclesProvider),
                         ]),
                       ).fadeUp(index: i < 8 ? i + 1 : 0),
                     ),
