@@ -37,6 +37,8 @@ class T {
   String get unpaid => _('فواتير غير مدفوعة', 'Unpaid invoices');
   String get stockTotal => _('المخزون الحالي', 'Stock on hand');
   String get capacityUse => _('استخدام المخزن', 'Warehouse use');
+  String get stockByMaterial => _('المخزون حسب الخامة', 'Stock by material');
+  String get ordersByStatus => _('الطلبات حسب الحالة', 'Orders by status');
   String get recentOrders => _('آخر الطلبات', 'Recent orders');
   String get nothingYet => _('لا شيء هنا بعد', 'Nothing here yet');
 

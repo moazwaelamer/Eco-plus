@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data.dart';
 import '../strings.dart';
+import '../widgets/charts.dart';
 import '../widgets/ui.dart';
 
 class OverviewPage extends ConsumerWidget {
@@ -43,6 +44,16 @@ class OverviewPage extends ConsumerWidget {
         builder: (s) => _StockStrip(s, t).fadeUp(index: 5),
       ),
       const SizedBox(height: 24),
+      LayoutBuilder(builder: (context, box) {
+        final wide = box.maxWidth >= 860;
+        final stockChart = EcoCard(child: StockBarChart(items: (stock.value?['items'] as List?)?.cast<Json>() ?? const [], title: t.stockByMaterial, unit: t.kg));
+        final orderChart = EcoCard(child: StatusDonut(counts: _countBy(orders.value ?? const []), title: t.ordersByStatus, label: t.status));
+        return (wide
+                ? Row(crossAxisAlignment: CrossAxisAlignment.start, children: [Expanded(child: stockChart), const SizedBox(width: 16), Expanded(child: orderChart)])
+                : Column(children: [stockChart, const SizedBox(height: 16), orderChart]))
+            .fadeUp(index: 6);
+      }),
+      const SizedBox(height: 24),
       Text(t.recentOrders, style: Theme.of(context).textTheme.titleLarge).fadeUp(index: 6),
       const SizedBox(height: 12),
       AsyncBody<List<Json>>(
@@ -55,6 +66,14 @@ class OverviewPage extends ConsumerWidget {
       const SizedBox(height: 32),
     ]);
   }
+}
+
+Map<String, int> _countBy(List<Json> list) {
+  final m = <String, int>{};
+  for (final o in list) {
+    m.update('${o['status']}', (v) => v + 1, ifAbsent: () => 1);
+  }
+  return m;
 }
 
 class _StockStrip extends StatelessWidget {
