@@ -8,6 +8,7 @@ import '../features/auth/register_screen.dart';
 import '../features/citizen/citizen_shell.dart';
 import '../features/citizen/scan_screen.dart';
 import '../features/driver/driver_screen.dart';
+import '../features/notifications/notifications_screen.dart';
 import '../features/staff/staff_screen.dart';
 import '../features/staff/weigh_screen.dart';
 
@@ -34,6 +35,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/register', pageBuilder: (_, st) => _page(st, const RegisterScreen())),
       GoRoute(path: '/home', pageBuilder: (_, st) => _page(st, const CitizenShell())),
       GoRoute(path: '/scan', pageBuilder: (_, st) => _page(st, const ScanScreen(), rise: true)),
+      GoRoute(path: '/notifications', pageBuilder: (_, st) => _page(st, const NotificationsScreen(), rise: true)),
       GoRoute(path: '/driver', pageBuilder: (_, st) => _page(st, const DriverScreen())),
       GoRoute(path: '/weigh', pageBuilder: (_, st) => _page(st, const WeighScreen())),
       GoRoute(path: '/staff', pageBuilder: (_, st) => _page(st, const StaffScreen())),

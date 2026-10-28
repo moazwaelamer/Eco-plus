@@ -57,7 +57,11 @@ class _Header extends ConsumerWidget {
       const LogoMark(size: 40),
       const SizedBox(width: 12),
       Expanded(child: Text(s.hello((user?.name ?? '').split(' ').first), style: t.titleLarge, overflow: TextOverflow.ellipsis)),
-      Badge(isLabelVisible: unread > 0, label: Text('$unread'), child: Icon(Icons.notifications_none_rounded, color: c.ink)),
+      IconButton(
+        tooltip: s.notificationsTitle,
+        onPressed: () => context.push('/notifications').then((_) => ref.invalidate(unreadProvider)),
+        icon: Badge(isLabelVisible: unread > 0, label: Text('$unread'), child: Icon(Icons.notifications_none_rounded, color: c.ink)),
+      ),
       const SizedBox(width: 8),
       PopupMenuButton<String>(
         icon: Icon(Icons.more_vert_rounded, color: c.ink),

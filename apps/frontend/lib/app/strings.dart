@@ -125,6 +125,10 @@ class S {
   String get done => _('تم', 'Done');
 
   String get staffTitle => _('لوحة الإدارة على الويب', 'Management lives on the web');
+  String get notificationsTitle => _('الإشعارات', 'Notifications');
+  String get markAllRead => _('تعليم الكل كمقروء', 'Mark all as read');
+  String get noNotifications => _('لا توجد إشعارات', 'No notifications');
+  String get noNotificationsSub => _('هنخبرك هنا لما يحصل جديد في شحناتك ونقاطك.', 'We will tell you here when something happens with your shipments and points.');
   String get weighTitle => _('وزن الشحنات', 'Weigh shipments');
   String get qrCode => _('كود الشحنة (QR)', 'Shipment QR code');
   String get findShipment => _('بحث', 'Find');
