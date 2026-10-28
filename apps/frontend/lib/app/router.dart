@@ -9,6 +9,7 @@ import '../features/citizen/citizen_shell.dart';
 import '../features/citizen/scan_screen.dart';
 import '../features/driver/driver_screen.dart';
 import '../features/staff/staff_screen.dart';
+import '../features/staff/weigh_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
@@ -34,6 +35,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/home', pageBuilder: (_, st) => _page(st, const CitizenShell())),
       GoRoute(path: '/scan', pageBuilder: (_, st) => _page(st, const ScanScreen(), rise: true)),
       GoRoute(path: '/driver', pageBuilder: (_, st) => _page(st, const DriverScreen())),
+      GoRoute(path: '/weigh', pageBuilder: (_, st) => _page(st, const WeighScreen())),
       GoRoute(path: '/staff', pageBuilder: (_, st) => _page(st, const StaffScreen())),
     ],
   );
@@ -57,6 +59,7 @@ CustomTransitionPage<void> _page(GoRouterState state, Widget child, {bool rise =
 String homeFor(User user) => switch (user.role) {
       'citizen' || 'business' => '/home',
       'driver' => '/driver',
+      'employee' => '/weigh',
       _ => '/staff',
     };
 

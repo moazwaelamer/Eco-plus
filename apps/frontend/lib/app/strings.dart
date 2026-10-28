@@ -125,6 +125,21 @@ class S {
   String get done => _('تم', 'Done');
 
   String get staffTitle => _('لوحة الإدارة على الويب', 'Management lives on the web');
+  String get weighTitle => _('وزن الشحنات', 'Weigh shipments');
+  String get qrCode => _('كود الشحنة (QR)', 'Shipment QR code');
+  String get findShipment => _('بحث', 'Find');
+  String get markCollected => _('تأكيد الاستلام', 'Mark collected');
+  String get materialLabel => _('الخامة', 'Material');
+  String get weightKg => _('الوزن (كجم)', 'Weight (kg)');
+  String get grade => _('الدرجة', 'Grade');
+  String get acceptShipment => _('قبول', 'Accept');
+  String get rejectShipment => _('رفض', 'Reject');
+  String get rejectReason => _('سبب الرفض', 'Reason for rejecting');
+  String get saveWeighing => _('تسجيل الوزن', 'Save weighing');
+  String get weighedOk => _('تم تسجيل الوزن', 'Weighing saved');
+  String get alreadyWeighed => _('تم وزن هذه الشحنة بالفعل', 'This shipment is already weighed');
+  String get notCollectedYet => _('الشحنة لم تُستلم بعد', 'This shipment has not been collected yet');
+  String get weighAnother => _('شحنة أخرى', 'Another shipment');
   String get staffBody => _('هذا الدور يعمل من لوحة التحكم على الويب، وهي قيد البناء. تطبيق الموبايل متاح الآن للعملاء والسائقين.', 'This role works from the web dashboard, which is being built. The mobile app is for customers and drivers for now.');
 }
 
