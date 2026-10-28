@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data.dart';
 import '../strings.dart';
+import '../widgets/active_switch.dart';
 import '../widgets/form_dialog.dart';
 import '../widgets/ui.dart';
 
@@ -26,13 +27,14 @@ class SetupPage extends ConsumerWidget {
           body,
         ]);
 
-    Widget row(String title, String detail, int i) => Padding(
+    Widget row(String title, String detail, int i, [Widget? trailing]) => Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: EcoCard(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
             child: Row(children: [
               Expanded(child: Text(title, style: tt.titleMedium)),
               Flexible(child: Text(detail, style: TextStyle(color: c.inkSoft), overflow: TextOverflow.ellipsis)),
+              ?trailing,
             ]),
           ).fadeUp(index: i < 8 ? i + 1 : 0),
         );
@@ -59,7 +61,7 @@ class SetupPage extends ConsumerWidget {
         AsyncBody<List<Json>>(
           value: ref.watch(materialsProvider),
           onRetry: () => ref.invalidate(materialsProvider),
-          builder: (list) => Column(children: [for (final (i, m) in list.indexed) row('${m['name']}', '${t.pointFactor} ${n(m['pointFactor'])} · ${n(m['pricePerKg'])} ${t.currency}/${t.kg}', i)]),
+          builder: (list) => Column(children: [for (final (i, m) in list.indexed) row('${m['name']}', '${t.pointFactor} ${n(m['pointFactor'])} · ${n(m['pricePerKg'])} ${t.currency}/${t.kg}', i, ActiveSwitch(value: m['isActive'] != false, path: '/materials/${m['id']}', refresh: materialsProvider))]),
         ),
       ),
       const SizedBox(height: 32),
