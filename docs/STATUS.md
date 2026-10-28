@@ -14,7 +14,7 @@
 | Area | What is missing |
 | --- | --- |
 | GitHub | Code is committed locally; not pushed yet. Branch protection not set |
-| CI | Written, never run |
+| CI | Backend and Flutter workflows. Every step was run locally on a clean `git archive` copy and passed (backend: typecheck, lint, 79 unit, 71 e2e, build; Flutter: analyze and tests for both apps). Never run on GitHub Actions |
 | Docker | Dockerfile and compose written, never built (Docker not installed on this machine) |
 | Hosting | No VPS, no Coolify, no staging (MOA-199, 200, 252) |
 | Flutter app | Built: login, register, citizen, driver, employee weighing (QR lookup, mark collected, accept or reject). Missing: notifications list, QR camera scan for weighing, push, offline, iOS/Android runs |
