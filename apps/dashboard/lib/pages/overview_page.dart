@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data.dart';
 import '../strings.dart';
 import '../widgets/charts.dart';
+import '../widgets/trends.dart';
 import '../widgets/ui.dart';
 
 class OverviewPage extends ConsumerWidget {
@@ -43,6 +44,8 @@ class OverviewPage extends ConsumerWidget {
         skeletonHeight: 90,
         builder: (s) => _StockStrip(s, t).fadeUp(index: 5),
       ),
+      const SizedBox(height: 24),
+      const TrendsSection(),
       const SizedBox(height: 24),
       LayoutBuilder(builder: (context, box) {
         final wide = box.maxWidth >= 860;
