@@ -1,0 +1,30 @@
+name: Flutter CI
+
+on:
+  pull_request:
+    branches: [main, dev]
+    paths: ['apps/frontend/**', 'apps/dashboard/**', 'packages/**', '.github/workflows/flutter.yml']
+  push:
+    branches: [main, dev]
+    paths: ['apps/frontend/**', 'apps/dashboard/**', 'packages/**', '.github/workflows/flutter.yml']
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [apps/frontend, apps/dashboard]
+    defaults:
+      run:
+        working-directory: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
