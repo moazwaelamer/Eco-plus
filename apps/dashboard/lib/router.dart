@@ -10,6 +10,7 @@ import 'pages/orders_page.dart';
 import 'pages/overview_page.dart';
 import 'pages/routes_page.dart';
 import 'pages/shipments_page.dart';
+import 'pages/fleet_page.dart';
 import 'pages/map_page.dart';
 import 'pages/stock_page.dart';
 import 'shell.dart';
@@ -58,6 +59,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/routes', pageBuilder: (_, st) => page(st, const RoutesPage())),
           GoRoute(path: '/orders', pageBuilder: (_, st) => page(st, const OrdersPage())),
           GoRoute(path: '/invoices', pageBuilder: (_, st) => page(st, const InvoicesPage())),
+          GoRoute(path: '/fleet', pageBuilder: (_, st) => page(st, const FleetPage())),
           GoRoute(path: '/map', pageBuilder: (_, st) => page(st, const MapPage())),
           GoRoute(path: '/stock', pageBuilder: (_, st) => page(st, const StockPage())),
           GoRoute(path: '/catalog', pageBuilder: (_, st) => page(st, const CatalogPage())),
