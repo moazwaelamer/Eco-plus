@@ -23,8 +23,11 @@ apps/backend/
     admin/           requests created by staff for phone / WhatsApp customers
     health/          GET /health
   test/              end-to-end tests against a real PostgreSQL
-apps/frontend/       Flutter mobile app (not started)
-apps/dashboard/      Flutter Web admin + factory portal (not started)
+apps/frontend/       Flutter mobile app: citizen, business, driver
+apps/dashboard/      Flutter Web: admin, factory and employee portal
+packages/eco_ui/     Brand tokens, theme, fonts, shared widgets (Flutter)
+packages/eco_core/   API client, token storage, session (Flutter)
+packages/brand/      tokens.json for non-Flutter use (website)
 docs/                this folder
 ```
 

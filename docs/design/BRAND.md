@@ -88,7 +88,7 @@ Standard with Egyptian-friendly wording; never blame the user in errors.
 | Surface | State |
 | --- | --- |
 | Mobile app (Flutter) | Built: login, register, citizen, driver |
-| Admin and factory dashboard (Flutter Web) | Not started; reuse the same tokens and widgets |
+| Admin and factory dashboard (Flutter Web) | Built (first version) on the same `eco_ui` package |
 | Website | Not started; landing page with the hero panel, how it works in 4 steps, impact numbers, download buttons |
 | Store assets, app icon, splash | Not made; icon is the mark on a canopy tile |
 

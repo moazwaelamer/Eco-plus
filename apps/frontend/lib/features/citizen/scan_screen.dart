@@ -11,7 +11,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../app/strings.dart';
 import '../../app/theme.dart';
 import '../../core/api.dart';
-import '../../widgets/common.dart';
 import '../../widgets/motion.dart';
 import 'citizen_data.dart';
 

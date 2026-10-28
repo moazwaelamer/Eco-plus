@@ -17,7 +17,8 @@
 | CI | Written, never run |
 | Docker | Dockerfile and compose written, never built (Docker not installed on this machine) |
 | Hosting | No VPS, no Coolify, no staging (MOA-199, 200, 252) |
-| Flutter | No mobile app, no dashboard. Flutter version not confirmed on this machine (MOA-208, 209, 222 to 226, 235, 236, 248 to 250) |
+| Flutter app | Built: login, register, citizen, driver. Missing: notifications list, employee weighing, push, offline, iOS/Android runs |
+| Dashboard | Built: admin overview, route planner, routes, orders, invoices, stock; factory catalog and orders. Missing: create drivers/vehicles/factories/materials in the UI, users and levels, charts, map, employee weighing |
 | Design | No Figma, colours, fonts or brand yet (MOA-210, 211). Only the written brief and screen list |
 | Push | Real FCM sending not built; tokens are stored (MOA-233) |
 | Backend Phase 3 (rest) | Admin dashboard numbers, impact report, capacity and low-stock alerts, audit log, user / level management (catalog, factory accounts, orders, invoices are built) |

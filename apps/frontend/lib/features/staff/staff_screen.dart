@@ -5,7 +5,6 @@ import '../../app/strings.dart';
 import '../../app/theme.dart';
 import '../../core/session.dart';
 import '../../widgets/brand.dart';
-import '../../widgets/common.dart';
 
 /// Admin, employee and factory work from the web dashboard (not built yet). The mobile app is honest about that.
 class StaffScreen extends ConsumerWidget {
